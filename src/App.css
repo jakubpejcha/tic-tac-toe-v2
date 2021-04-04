@@ -17,8 +17,24 @@
   place-items: center;
 }
 
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+  opacity: .7;
+  display: none;
+}
+
+.modal.show {
+  display: block;
+}
+
 .board {
   display: grid;
+  cursor: url(images/pencil.svg), auto;
 }
 
 .board_3 {
@@ -38,9 +54,72 @@
   transform: scale(.3);
   opacity: 0;
   transition: transform .3s;
+  position: relative;
 }
 
 .board__cell.show {
   transform: scale(1);
   opacity: 1;
+}
+
+.board__cell.o::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid black;
+  border-radius: 50%;
+  width: calc(var(--cell-size) * 0.75);
+  height: calc(var(--cell-size) * 0.75);
+}
+
+.board__cell.current_o:not(.x):not(.o):hover::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid rgba(0, 0, 0, .5);
+  border-radius: 50%;
+  width: calc(var(--cell-size) * 0.75);
+  height: calc(var(--cell-size) * 0.75);
+}
+
+.board__cell.x::after,
+.board__cell.x::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--cell-size) * 0.75);
+  height: 3px;
+  background-color: black;
+}
+
+.board__cell.x::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.board__cell.x::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.board__cell.current_x:not(.x):not(.o):hover::after,
+.board__cell.current_x:not(.x):not(.o):hover::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--cell-size) * 0.75);
+  height: 3px;
+  background-color: rgba(0, 0, 0, .5);
+}
+
+.board__cell.current_x:not(.x):not(.o):hover::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.board__cell.current_x:not(.x):not(.o):hover::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
