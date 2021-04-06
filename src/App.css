@@ -23,13 +23,29 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: black;
-  opacity: .7;
+  background-color: rgba(0, 0, 0, .7);
   display: none;
 }
 
+@supports(-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px)) {
+  .modal {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, .7);
+  }
+}
+
 .modal.show {
-  display: block;
+  display: grid;
+  place-items: center;
+}
+
+.modal__message {
+  background: #fff;
+  font-size: 4rem;
+  padding: .5em 1em;
+  text-transform: uppercase;
+  border-radius: 0 7px 0 7px;
 }
 
 .board {
