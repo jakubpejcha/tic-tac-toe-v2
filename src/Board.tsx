@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react';
 import Cell from './Cell';
 import { CellInterface } from './shared/interfaces';
 import { checkWinner } from './checkWinner';
+import Modal from './Modal';
 
-const BOARD_NUM_ROWS = 10;
+const BOARD_NUM_ROWS = 3;
 const DELAY = 1000 / (2 * BOARD_NUM_ROWS);
 const WIN_STREAK = BOARD_NUM_ROWS >= 5 ? 5 : BOARD_NUM_ROWS;
 
 const Board = () => {
 
-	const [winner, setWinner] = useState<boolean | string>(false);
+	const [isWinner, setIsWinner] = useState(false);
+
+	const [isDraw, setIsDraw] = useState(false);
 
 	const [numMoves, setNumMoves] = useState(0);
 
@@ -37,7 +40,7 @@ const Board = () => {
 	
 					return newCells;
 				});
-			}, index * DELAY);
+			}, index * 0);//DELAY
 		});
 	};
 
@@ -65,28 +68,20 @@ const Board = () => {
 
 	};
 
-	// If we have a winner, anounce it to the user
-	useEffect(() => {
-		if (winner) document.querySelector('.modal')?.classList.add('show');
-	}, [winner]);
-
-	// check for draw
-	useEffect(() => {
-		if (!winner && numMoves === BOARD_NUM_ROWS * BOARD_NUM_ROWS) {
-			const modalMessageElem = document.querySelector('.modal > .modal__message');
-			
-			if (!modalMessageElem) return;// TODO: some error message display
-			modalMessageElem.textContent = 'Remíza';
-
-			document.querySelector('.modal')?.classList.add('show');
-		};
-	}, [numMoves])
-
 	useEffect(() => {
 		//TEST
 		if (lastCell === -1) return; // do not run after app starts
 		
-		checkWinner(cells, player, BOARD_NUM_ROWS, lastCell, WIN_STREAK);
+		if (checkWinner(cells, player, BOARD_NUM_ROWS, lastCell, WIN_STREAK)) {
+			setIsWinner(true);
+			return;
+		}
+
+		// check for draw
+		if (numMoves === BOARD_NUM_ROWS * BOARD_NUM_ROWS) {
+			setIsDraw(true);
+			return;
+		};
 
 		setPlayer((prevPlayer) => {
 			if (prevPlayer === 'x') return 'o';
@@ -96,18 +91,21 @@ const Board = () => {
 	}, [lastCell]);
 
 	return (
-		<div className={`board board_${BOARD_NUM_ROWS}`}>
-			{cells.map((cell, pos) => (
-				<Cell
-					key={pos}
-					index={pos}
-					showClassName={cell.showClassName}
-					takenByPlayer={cell.takenByPlayer}
-					currentPlayer={` current_${player}`}
-					onClickCallback={onCellClick}
-				/>
-			))}
-		</div>
+		<>
+			<div className={`board board_${BOARD_NUM_ROWS}`}>
+				{cells.map((cell, pos) => (
+					<Cell
+						key={pos}
+						index={pos}
+						showClassName={cell.showClassName}
+						takenByPlayer={cell.takenByPlayer}
+						currentPlayer={` current_${player}`}
+						onClickCallback={onCellClick}
+					/>
+				))}
+			</div>
+			<Modal isWinner={isWinner} isDraw={isDraw} winner={player} />
+		</>
 	)
 };
 

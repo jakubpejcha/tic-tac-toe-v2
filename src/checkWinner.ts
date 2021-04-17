@@ -102,30 +102,45 @@ const getDiagonalDownRight = (size: number, index: number, winStreak: number): n
 	return diagonal;
 }
 
-const checkVertical = (array: CellInterface[], currentPlayer: string, size: number, index: number, winStreak: number): boolean => {
-	const column = getColumn(size, index, winStreak);
+const checkMoves = (
+	array: CellInterface[],
+	currentPlayer: string,
+	size: number,
+	index: number,
+	winStreak: number,
+	callbackDirection: ((size: number, index: number, winStreak: number) => number[])
+): boolean => {
+	const direction = callbackDirection(size, index, winStreak);
 	
 	let streak = 0;
-	const length = column.length;
+	const length = direction.length;
 	
 	for (let i = 0; i < length; i++) {
 		streak++;
-		console.log(array[column[i]].takenByPlayer);
 		
-		if (array[column[i]].takenByPlayer === '' || array[column[i]].takenByPlayer.trim() !== currentPlayer) {
+		if (array[direction[i]].takenByPlayer === '' || array[direction[i]].takenByPlayer.trim() !== currentPlayer) {
 			streak = 0;
 		};
 
 		if (streak === winStreak) return true
 		
 	}
-	console.log(streak);
 	
 	return false;
 }
 
-export const checkWinner = (array: CellInterface[], currentPlayer: string, size: number, index: number, winStreak: number) => {
-	// console.log(getDiagonalUpRight(size, index, winStreak));
-	// console.log(getDiagonalDownRight(size, index, winStreak));
-	console.log(checkVertical(array, currentPlayer, size, index, winStreak));
+export const checkWinner = (
+	array: CellInterface[],
+	currentPlayer: string,
+	size: number,
+	index: number,
+	winStreak: number
+): boolean => {
+
+	if (checkMoves(array, currentPlayer, size, index, winStreak, getColumn)) return true;
+	if (checkMoves(array, currentPlayer, size, index, winStreak, getRow)) return true;
+	if (checkMoves(array, currentPlayer, size, index, winStreak, getDiagonalUpRight)) return true;
+	if (checkMoves(array, currentPlayer, size, index, winStreak, getDiagonalDownRight)) return true;
+
+	return false;
 }
