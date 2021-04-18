@@ -5,10 +5,11 @@ interface Props {
 	showClassName: string,
 	takenByPlayer: string,
 	currentPlayer: string,
+	size:string,
 	onClickCallback: (index: number) => void
 };
 
-const Cell = ({ index, showClassName, takenByPlayer, currentPlayer, onClickCallback }: Props) => {
+const Cell = ({ index, showClassName, takenByPlayer, currentPlayer, size, onClickCallback }: Props) => {
 
 	const handleOnClick = (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		if (typeof e.currentTarget.dataset.index === 'undefined') return null;
@@ -18,7 +19,7 @@ const Cell = ({ index, showClassName, takenByPlayer, currentPlayer, onClickCallb
 	return (
 		<div
 			data-index={index}
-			className={`board__cell${showClassName}${currentPlayer}${takenByPlayer}`}
+			className={`board__cell board__cell${size}${showClassName}${currentPlayer}${takenByPlayer}`}
 			onClick={handleOnClick}
 		/>
 	)

@@ -4,11 +4,35 @@ import { CellInterface } from './shared/interfaces';
 import { checkWinner } from './checkWinner';
 import Modal from './Modal';
 
-const BOARD_NUM_ROWS = 3;
-const DELAY = 1000 / (2 * BOARD_NUM_ROWS);
-const WIN_STREAK = BOARD_NUM_ROWS >= 5 ? 5 : BOARD_NUM_ROWS;
+interface Dimensions {
+	BOARD_NUM_ROWS: number,
+	SIZE: string,
+	DELAY: number,
+	WIN_STREAK: number
+}
+
+const getDimensions = (numRows: number): Dimensions => {
+	const dimensions = {
+		BOARD_NUM_ROWS: numRows,
+		SIZE: '',
+		DELAY: 0,
+		WIN_STREAK: 0
+	}
+
+	if (numRows === 3) dimensions.SIZE = '--small';
+	if (numRows === 10) dimensions.SIZE = '--large';
+
+	if (numRows === 3) dimensions.DELAY = 150;
+	if (numRows === 10) dimensions.DELAY = 10;
+
+	dimensions.WIN_STREAK = numRows >= 5 ? 5 : numRows;
+
+	return dimensions;
+}
 
 const Board = () => {
+
+	const dimensions = getDimensions(3);
 
 	const [isWinner, setIsWinner] = useState(false);
 
@@ -18,7 +42,7 @@ const Board = () => {
 
 	const [player, setPlayer] = useState('x');
 
-	const [cells, setCells] = useState<CellInterface[]>(Array(BOARD_NUM_ROWS * BOARD_NUM_ROWS).fill({
+	const [cells, setCells] = useState<CellInterface[]>(Array(dimensions.BOARD_NUM_ROWS * dimensions.BOARD_NUM_ROWS).fill({
 		showClassName: '',
 		takenByPlayer: '',
 	}));
@@ -40,7 +64,7 @@ const Board = () => {
 	
 					return newCells;
 				});
-			}, index * 0);//DELAY
+			}, index * dimensions.DELAY);
 		});
 	};
 
@@ -72,13 +96,13 @@ const Board = () => {
 		//TEST
 		if (lastCell === -1) return; // do not run after app starts
 		
-		if (checkWinner(cells, player, BOARD_NUM_ROWS, lastCell, WIN_STREAK)) {
+		if (checkWinner(cells, player, dimensions.BOARD_NUM_ROWS, lastCell, dimensions.WIN_STREAK)) {
 			setIsWinner(true);
 			return;
 		}
 
 		// check for draw
-		if (numMoves === BOARD_NUM_ROWS * BOARD_NUM_ROWS) {
+		if (numMoves === dimensions.BOARD_NUM_ROWS * dimensions.BOARD_NUM_ROWS) {
 			setIsDraw(true);
 			return;
 		};
@@ -92,7 +116,7 @@ const Board = () => {
 
 	return (
 		<>
-			<div className={`board board_${BOARD_NUM_ROWS}`}>
+			<div className={`board board_${dimensions.BOARD_NUM_ROWS}`}>
 				{cells.map((cell, pos) => (
 					<Cell
 						key={pos}
@@ -100,6 +124,7 @@ const Board = () => {
 						showClassName={cell.showClassName}
 						takenByPlayer={cell.takenByPlayer}
 						currentPlayer={` current_${player}`}
+						size={dimensions.SIZE}
 						onClickCallback={onCellClick}
 					/>
 				))}
