@@ -32,7 +32,7 @@ const getDimensions = (numRows: number): Dimensions => {
 
 const Board = () => {
 
-	const dimensions = getDimensions(3);
+	const dimensions = getDimensions(10);
 
 	const [isWinner, setIsWinner] = useState(false);
 

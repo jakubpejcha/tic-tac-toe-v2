@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import Board from './Board';
+import ThemeToggler from './ThemeToggler';
 
 const App = () => {
 
@@ -8,13 +9,16 @@ const App = () => {
 
   const theme = themeGrey ? 'grey' : 'color';
 
+  const handleThemeChange = () => {
+    setThemeGrey(prev => !prev)
+  }
+
   return (
       <div className={`app-container app-container--${theme}`}>
-        <button
-          type="button"
-          className="theme-toggle"
-          onClick={() => setThemeGrey(prev => !prev)}
-        >Přepnout vzhled</button>
+        <ThemeToggler
+          theme={theme}
+          onClickHandler={handleThemeChange}
+        />
         <Board />
       </div>
   );
