@@ -32,7 +32,7 @@ const getDimensions = (numRows: number): Dimensions => {
 
 const Board = () => {
 
-	const dimensions = getDimensions(10);
+	const dimensions = getDimensions(3);
 
 	const [isWinner, setIsWinner] = useState(false);
 
@@ -45,6 +45,7 @@ const Board = () => {
 	const [cells, setCells] = useState<CellInterface[]>(Array(dimensions.BOARD_NUM_ROWS * dimensions.BOARD_NUM_ROWS).fill({
 		showClassName: '',
 		takenByPlayer: '',
+		winning: false,
 	}));
 
 	const [lastCell, setLastCell] = useState(-1);
@@ -95,11 +96,26 @@ const Board = () => {
 	useEffect(() => {
 		//TEST
 		if (lastCell === -1) return; // do not run after app starts
+
+		const result: boolean | number[] = checkWinner(cells, player, dimensions.BOARD_NUM_ROWS, lastCell, dimensions.WIN_STREAK);
 		
-		if (checkWinner(cells, player, dimensions.BOARD_NUM_ROWS, lastCell, dimensions.WIN_STREAK)) {
+		if (result && Array.isArray(result)) {
 			setIsWinner(true);
+			setCells((prevCells) => {
+				const newCells = [...prevCells];
+				result.forEach(cell => {
+					newCells[cell] = {
+						...prevCells[cell],
+						winning: true,
+					};
+				});
+
+				return newCells;
+			});
 			return;
 		}
+		//console.log(checkWinner(cells, player, dimensions.BOARD_NUM_ROWS, lastCell, dimensions.WIN_STREAK));
+		
 
 		// check for draw
 		if (numMoves === dimensions.BOARD_NUM_ROWS * dimensions.BOARD_NUM_ROWS) {
@@ -123,6 +139,7 @@ const Board = () => {
 						index={pos}
 						showClassName={cell.showClassName}
 						takenByPlayer={cell.takenByPlayer}
+						winning={cell.winning}
 						currentPlayer={` current_${player}`}
 						size={dimensions.SIZE}
 						onClickCallback={onCellClick}

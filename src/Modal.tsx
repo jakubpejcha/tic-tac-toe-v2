@@ -10,9 +10,9 @@ interface Props {
 const Modal = ({ isWinner, isDraw, winner }: Props) => {
 	const [isHidden, setIsHidden] = useState(true);
 
-	useEffect(() => {
-		setIsHidden(!(isWinner || isDraw));
-	}, [isWinner, isDraw]);
+	// useEffect(() => {
+	// 	setIsHidden(!(isWinner || isDraw));
+	// }, [isWinner, isDraw]);
 
 	const portal: HTMLElement | null = document.getElementById('modalPortal');
 

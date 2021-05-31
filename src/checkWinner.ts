@@ -109,20 +109,23 @@ const checkMoves = (
 	index: number,
 	winStreak: number,
 	callbackDirection: ((size: number, index: number, winStreak: number) => number[])
-): boolean => {
+): boolean | number[] => {
 	const direction = callbackDirection(size, index, winStreak);
 	
 	let streak = 0;
+	const winningCells: number[] = [];
 	const length = direction.length;
 	
 	for (let i = 0; i < length; i++) {
 		streak++;
+		winningCells.push(direction[i]);
 		
 		if (array[direction[i]].takenByPlayer === '' || array[direction[i]].takenByPlayer.trim() !== currentPlayer) {
 			streak = 0;
+			winningCells.length = 0;
 		};
 
-		if (streak === winStreak) return true
+		if (streak === winStreak) return winningCells;
 		
 	}
 	
@@ -135,12 +138,14 @@ export const checkWinner = (
 	size: number,
 	index: number,
 	winStreak: number
-): boolean => {
+): boolean | number[] => {
 
-	if (checkMoves(array, currentPlayer, size, index, winStreak, getColumn)) return true;
-	if (checkMoves(array, currentPlayer, size, index, winStreak, getRow)) return true;
-	if (checkMoves(array, currentPlayer, size, index, winStreak, getDiagonalUpRight)) return true;
-	if (checkMoves(array, currentPlayer, size, index, winStreak, getDiagonalDownRight)) return true;
+	return (
+		checkMoves(array, currentPlayer, size, index, winStreak, getColumn) ||
+		checkMoves(array, currentPlayer, size, index, winStreak, getRow) ||
+		checkMoves(array, currentPlayer, size, index, winStreak, getDiagonalUpRight) ||
+		checkMoves(array, currentPlayer, size, index, winStreak, getDiagonalDownRight) ||
+		false
+	);
 
-	return false;
 }
