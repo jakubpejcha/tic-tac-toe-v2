@@ -3,6 +3,7 @@ import Cell from './Cell';
 import { CellInterface } from './shared/interfaces';
 import { checkWinner } from './checkWinner';
 import Modal from './Modal';
+import './styles/Board.css';
 
 interface Dimensions {
 	BOARD_NUM_ROWS: number,

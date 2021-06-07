@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import './styles/ThemeToggler.css';
 
 interface Props {
 	theme: string,

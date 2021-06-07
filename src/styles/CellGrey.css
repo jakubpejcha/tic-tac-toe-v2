@@ -1,0 +1,65 @@
+.app-container--grey .board__cell {
+	border: none;
+	border-radius: 0;
+	background: linear-gradient(135deg, var(--color-border-cell-grey-light), var(--color-border-cell-grey));
+	border: 8px inset var(--color-border-cell-border-grey);
+}
+
+.app-container--grey .board__cell--large {
+	border: 4px inset var(--color-border-cell-border-grey);
+}
+
+.app-container--grey .board__cell--small.o::after {
+	width: calc(var(--cell-size) * 0.7);
+	height: calc(var(--cell-size) * 0.7);
+	border: 10px solid var(--color-player-grey);
+}
+
+.app-container--grey .board__cell--large.o::after {
+	width: calc(var(--cell-size-10) * 0.7);
+	height: calc(var(--cell-size-10) * 0.7);
+	border: 5px solid var(--color-player-grey);
+}
+
+.app-container--grey .board__cell.winning.o::after {
+	border-color: var(--color-winner-grey);
+}
+
+.app-container--grey .board__cell--small.current_o:not(.x):not(.o):hover::after {
+	width: calc(var(--cell-size) * 0.7);
+	height: calc(var(--cell-size) * 0.7);
+	border: 10px solid var(--color-player-grey-hover);
+}
+
+.app-container--grey .board__cell--large.current_o:not(.x):not(.o):hover::after {
+	width: calc(var(--cell-size-10) * 0.7);
+	height: calc(var(--cell-size-10) * 0.7);
+	border: 5px solid var(--color-player-grey-hover);
+}
+
+.app-container--grey .board__cell.x::after,
+.app-container--grey .board__cell.x::before {
+  background-color: var(--color-player-grey);
+}
+
+.app-container--grey .board__cell.winning.x::after,
+.app-container--grey .board__cell.winning.x::before {
+	background-color: var(--color-winner-grey);
+}
+
+.app-container--grey .board__cell--small.x::after,
+.app-container--grey .board__cell--small.x::before  {
+	width: calc(var(--cell-size) * 0.7);
+	height: 10px;
+}
+
+.app-container--grey .board__cell--large.x::after,
+.app-container--grey .board__cell--large.x::before  {
+	width: calc(var(--cell-size-10) * 0.7);
+	height: 5px;
+}
+
+.app-container--grey .board__cell.current_x:not(.x):not(.o):hover::after,
+.app-container--grey .board__cell.current_x:not(.x):not(.o):hover::before {
+  background: var(--color-player-grey-hover);
+}

@@ -1,4 +1,7 @@
 import React from 'react';
+import './styles/Cell.css';
+import './styles/CellGrey.css';
+import './styles/CellColor.css';
 
 interface Props {
 	index: number,

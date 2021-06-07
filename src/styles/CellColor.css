@@ -1,0 +1,17 @@
+.app-container--color .board__cell.o {
+	background: var(--color-player-o);
+	border: transparent;
+}
+
+.app-container--color .board__cell.winning {
+	transform: rotateY(-180deg);
+}
+
+.app-container--color .board__cell--backface.winning {
+	transform: rotateY(0);
+}
+
+.app-container--color .board__cell.x {
+	background: var(--color-player-x);
+	border: none;
+}

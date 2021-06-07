@@ -1,0 +1,44 @@
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+  --cell-size: 6rem; /* 3 x 3 */
+  --cell-size-10: 3rem;
+
+  --color-background: #e9cd50;
+  --color-background-grey: #404040;
+  --color-background-grey-light: #c9cccc;
+
+  --color-player-o: #53b5b0;
+  --color-player-x: #e56b7a;
+  --color-player: #eee;
+  --color-player-grey: #a9b3b5;
+  --color-player-grey-hover: #3f4647;
+
+  --color-border-cell: #5d4c03;
+  --color-border-cell-grey: #4a5456;
+  --color-border-cell-grey-light: #707a7b;
+  --color-border-cell-border-grey: #5f696b;
+
+  --color-winner-grey: #edb13b;
+}
+
+.app-container {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.app-container--color {
+  background: var(--color-background);
+}
+
+.app-container--grey {
+  background: linear-gradient(135deg, var(--color-background-grey-light), var(--color-background-grey));
+}

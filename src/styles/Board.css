@@ -1,0 +1,20 @@
+.board {
+	display: grid;
+	cursor: url(../images/pencil.svg), auto;
+}
+
+.board_3 {
+	grid-template-columns: repeat(3, var(--cell-size));
+	grid-template-rows: repeat(3, var(--cell-size));
+	grid-gap: .5rem;
+}
+
+.app-container--grey .board_3 {
+	grid-gap: 1rem;
+}
+
+.board_10 {
+	grid-template-columns: repeat(10, var(--cell-size-10));
+	grid-template-rows: repeat(10, var(--cell-size-10));
+	grid-gap: .3rem;
+}
