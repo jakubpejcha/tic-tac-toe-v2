@@ -83,7 +83,9 @@
 }
 
 .board__cell.x::after,
-.board__cell.x::before {
+.board__cell.x::before,
+.board__cell--backface.x::after,
+.board__cell--backface.x::before {
 	content: "";
 	position: absolute;
 	top: 50%;
@@ -91,22 +93,28 @@
 	background-color: var(--color-player);
 }
 
-.board__cell.x::before {
+.board__cell.x::before,
+.board__cell--backface.x::before {
 	transform: translate(-50%, -50%) rotate(45deg);
 }
 
-.board__cell.x::after {
+.board__cell.x::after,
+.board__cell--backface.x::after {
 	transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .board__cell--small.x::after,
-.board__cell--small.x::before  {
+.board__cell--small.x::before,
+.board__cell--backface--small.x::before ,
+.board__cell--backface--small.x::after   {
 	width: calc(var(--cell-size) * 0.75);
 	height: 10px;
 }
 
 .board__cell--large.x::after,
-.board__cell--large.x::before  {
+.board__cell--large.x::before,
+.board__cell--backface--large.x::before ,
+.board__cell--backface--large.x::after   {
 	width: calc(var(--cell-size-10) * 0.75);
 	height: 5px;
 }
