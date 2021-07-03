@@ -1,0 +1,48 @@
+.score {
+	position: absolute;
+	top: 1rem;
+	display: flex;
+	align-items: center;
+	gap: 3rem;
+	font-size: 4rem;
+	color: var(--color-border-cell);
+}
+
+.score--grey {
+	color: var(--color-border-cell-grey);
+}
+
+.score__table {
+	font-size: .9em;
+	font-family: 'Tourney', cursive;
+}
+
+.score__row {
+	display: flex;
+	text-align: center;
+}
+
+.score__row > span {
+	flex: 1;
+}
+
+.score__row:first-child {
+	font-weight: bold;
+}
+
+.score__row:last-child {
+	font-size: .8em;
+}
+
+.score__column--left {
+	border-right: 2px solid currentColor;
+	padding: 0 .25em 0 .5em;
+}
+
+.score__column--right {
+	padding: 0 .5em 0 .25em;
+}
+
+.score__row--players {
+	border-bottom: 3px solid currentColor;
+}

@@ -31,7 +31,13 @@ const getDimensions = (numRows: number): Dimensions => {
 	return dimensions;
 }
 
-const Board = () => {
+interface Props {
+	scoreHandler: (updatePlayer: string) => void,
+	restart: boolean,
+	unsetRestart: () => void,
+}
+
+const Board = ({ scoreHandler, restart, unsetRestart }: Props) => {
 
 	const dimensions = getDimensions(3);
 
@@ -50,6 +56,31 @@ const Board = () => {
 	}));
 
 	const [lastCell, setLastCell] = useState(-1);
+
+	// restart board
+	useEffect(() => {
+		setIsWinner(false);
+		setIsDraw(false);
+		setNumMoves(0);
+		setPlayer('x');
+
+		cells.forEach((cell, index) => {
+			setCells(prevCells => {
+				const newCells = [...prevCells];
+	
+				newCells[index] = {
+					...cell,
+					takenByPlayer: '',
+					winning: false
+				}
+
+				return newCells;
+			});
+		});
+		
+		setLastCell(-1);
+		unsetRestart();
+	}, [restart]);
 
 	// Nice animation of creating the board
 	const showBoard = () => {
@@ -102,6 +133,7 @@ const Board = () => {
 		
 		if (result && Array.isArray(result)) {
 			setIsWinner(true);
+			scoreHandler(player);
 			setCells((prevCells) => {
 				const newCells = [...prevCells];
 				result.forEach(cell => {

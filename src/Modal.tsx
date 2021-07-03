@@ -18,7 +18,7 @@ const Modal = ({ isWinner, isDraw, winner }: Props) => {
 
 			setTimeout(() => {
 				setIsHidden(true);
-			}, 3000);
+			}, 2000);
 
 		}, 1000);
 

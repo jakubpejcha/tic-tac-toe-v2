@@ -3,3 +3,9 @@ export interface CellInterface {
 	takenByPlayer: string,
 	winning: boolean
 };
+
+export interface ScoreInterface {
+	[index: string]: number,
+	x: number,
+	o: number
+}
