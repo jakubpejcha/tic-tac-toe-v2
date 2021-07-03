@@ -74,10 +74,10 @@ const Board = () => {
 		showBoard();
 	}, []);
 
-	const onCellClick = (index: number) => {	
+	const onCellClick = (index: number) => {
 		setCells((prevCells => {
 			// in case cell has been clicked before
-			if (prevCells[index].takenByPlayer !== '') return prevCells;
+			if (prevCells[index].takenByPlayer !== '' || isWinner) return prevCells;
 
 			const newCells = [...prevCells];
 

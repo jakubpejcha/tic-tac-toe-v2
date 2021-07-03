@@ -26,6 +26,12 @@
   --color-border-cell-border-grey: #5f696b;
 
   --color-winner-grey: #edb13b;
+
+  --modal-border-step: 2px;
+}
+
+body {
+  font-family: 'Yomogi', cursive;
 }
 
 .app-container {
