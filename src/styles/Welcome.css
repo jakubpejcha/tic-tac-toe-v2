@@ -1,0 +1,52 @@
+.welcome {
+	width: 100vw;
+	height: 100vh;
+	background: var(--color-background-welcome);
+	color: #f0f0f0;
+	display: grid;
+	place-items: center;
+}
+
+.welcome__title {
+	position: absolute;
+	font-family: 'Tourney', cursive;
+	/* font-size: 10rem; */
+	animation: titleAnimation 3000ms;
+	animation-fill-mode: forwards;
+}
+
+.welcome__menu {
+	opacity: 0;
+	position: absolute;
+	top: 45vh;
+	animation: menuAnimation 1000ms;
+	animation-delay: 2000ms;
+	animation-fill-mode: forwards;
+}
+
+@keyframes titleAnimation {
+	0% {
+		opacity: 0;
+		transform: translateY(0);
+		font-size: 10rem;
+	}
+	50% {
+		opacity: 1;
+		transform: translateY(0);
+		font-size: 10rem;
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(-150%);
+		font-size: 8rem;
+	}
+}
+
+@keyframes menuAnimation {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}

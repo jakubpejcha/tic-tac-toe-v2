@@ -10,6 +10,7 @@
   --cell-size: 6rem; /* 3 x 3 */
   --cell-size-10: 3rem;
 
+  --color-background-welcome: linear-gradient(125deg, rgba(65, 91, 141, .8), #415B8D);
   --color-background: #e9cd50;
   --color-background-grey: #404040;
   --color-background-grey-light: #c9cccc;

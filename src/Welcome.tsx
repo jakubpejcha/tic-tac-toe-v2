@@ -1,0 +1,58 @@
+import './styles/Welcome.css';
+import GameMenu from './GameMenu';
+import {
+	Link,
+	Route,
+	Switch,
+	useRouteMatch
+} from 'react-router-dom';
+
+type RouteType = {
+	path: string,
+	url: string
+}
+
+const Welcome = () => {
+	const { path, url } = useRouteMatch<RouteType>();
+	console.log(path);
+	console.log(url);
+	
+	return (
+		<div className="welcome">
+			<h1 className="welcome__title">TIC TAC TOE</h1>
+			<div className="welcome__menu">
+				<Switch>
+					<Route path={`${path}/mode-3`}>
+						<GameMenu>
+							<li>
+								<Link to="/game/pvp">Player vs Player</Link>
+							</li>
+							<li>
+								<Link to="/game/pvc">Player vs AI</Link>
+							</li>
+						</GameMenu>
+					</Route>
+					<Route path={`${path}/mode-10`}>
+						<GameMenu>
+							<li>
+								<Link to="/game/pvp">Player vs Player</Link>
+							</li>
+						</GameMenu>
+					</Route>
+					<Route path={path}>
+						<GameMenu>
+							<li>
+								<Link to={`${url}/mode-3`}>3 x 3 mode (possible AI opponent)</Link>
+							</li>
+							<li>
+								<Link to={`${url}/mode-10`}>10 x 10 mode</Link>
+							</li>
+						</GameMenu>
+					</Route>
+				</Switch>
+			</div>
+		</div>
+	)
+}
+
+export default Welcome;

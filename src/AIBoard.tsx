@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Cell from './Cell';
 import { CellInterface } from './shared/interfaces';
 import { checkWinner } from './checkWinner';
+import { findBestMove } from './minimax';
 import Modal from './Modal';
 import './styles/Board.css';
 
@@ -37,7 +38,7 @@ interface Props {
 	unsetRestart: () => void,
 }
 
-const Board = ({ scoreHandler, restart, unsetRestart }: Props) => {
+const AIBoard = ({ scoreHandler, restart, unsetRestart }: Props) => {
 
 	const dimensions = getDimensions(3);
 
@@ -106,6 +107,12 @@ const Board = ({ scoreHandler, restart, unsetRestart }: Props) => {
 	}, []);
 
 	const onCellClick = (index: number) => {
+
+		// also checf for player 'o'
+		// TODO: checking wrong last cell
+
+		//if (player === 'o') setPlayer('x');
+
 		setCells((prevCells => {
 			// in case cell has been clicked before
 			if (prevCells[index].takenByPlayer !== '' || isWinner) return prevCells;
@@ -117,12 +124,56 @@ const Board = ({ scoreHandler, restart, unsetRestart }: Props) => {
 				takenByPlayer: ` ${player}`
 			}
 
+			// // forAI
+			// const boardData = {
+			// 	cells: newCells,
+			// 	currentPlayer: 'o',
+			// 	size: dimensions.BOARD_NUM_ROWS,
+			// 	lastCellIndex: index,
+			// 	winStreak: dimensions.WIN_STREAK
+			// }
+
+			// const opponentIndex = findBestMove(boardData);
+			// newCells[opponentIndex] = {
+			// 	...prevCells[opponentIndex],
+			// 	takenByPlayer: ' o'
+			// }
+
+			//setNumMoves(prevNum => prevNum + 1);
 			setNumMoves(prevNum => prevNum + 1);
+			//setLastCell(index);
 			setLastCell(index);
 
 			return newCells;
 		}));
 
+		//move elsewhere
+		const resultO: boolean | number[] = checkWinner(cells, 'o', dimensions.BOARD_NUM_ROWS, lastCell, dimensions.WIN_STREAK);
+		//console.log(lastCell);
+		
+		if (resultO && Array.isArray(resultO)) {
+			setIsWinner(true);
+			scoreHandler('o');
+			setCells((prevCells) => {
+				const newCells = [...prevCells];
+				resultO.forEach(cell => {
+					newCells[cell] = {
+						...prevCells[cell],
+						winning: true,
+					};
+				});
+
+				return newCells;
+			});
+			return;
+		}
+
+		if (numMoves === dimensions.BOARD_NUM_ROWS * dimensions.BOARD_NUM_ROWS) {
+			setIsDraw(true);
+			return;
+		};
+
+		//setPlayer('o');
 	};
 
 	useEffect(() => {
@@ -130,6 +181,7 @@ const Board = ({ scoreHandler, restart, unsetRestart }: Props) => {
 		if (lastCell === -1) return; // do not run after app starts
 
 		const result: boolean | number[] = checkWinner(cells, player, dimensions.BOARD_NUM_ROWS, lastCell, dimensions.WIN_STREAK);
+		
 		
 		if (result && Array.isArray(result)) {
 			setIsWinner(true);
@@ -160,8 +212,46 @@ const Board = ({ scoreHandler, restart, unsetRestart }: Props) => {
 			if (prevPlayer === 'x') return 'o';
 			return 'x';
 		});
+		
 
 	}, [lastCell]);
+
+	//AI move
+	useEffect(() => {
+		if (player === 'o') {
+
+			setCells((prevCells => {
+				// in case cell has been clicked before
+				// forAI
+				const boardData = {
+					cells: cells,
+					currentPlayer: 'o',
+					size: dimensions.BOARD_NUM_ROWS,
+					lastCellIndex: lastCell,
+					winStreak: dimensions.WIN_STREAK
+				}
+
+				const index = findBestMove(boardData);
+
+				//if (prevCells[index].takenByPlayer !== '' || isWinner) return prevCells;
+	
+				const newCells = [...prevCells];
+	
+				newCells[index] = {
+					...prevCells[index],
+					takenByPlayer: ' o'
+				}
+	
+	
+				//setNumMoves(prevNum => prevNum + 1);
+				setNumMoves(prevNum => prevNum + 1);
+				//setLastCell(index);
+				setLastCell(index);
+	
+				return newCells;
+			}));
+		}
+	}, [player]);
 
 	return (
 		<>
@@ -173,7 +263,7 @@ const Board = ({ scoreHandler, restart, unsetRestart }: Props) => {
 						showClassName={cell.showClassName}
 						takenByPlayer={cell.takenByPlayer}
 						winning={cell.winning}
-						currentPlayer={` current_${player}`}
+						currentPlayer={` current_x`}
 						size={dimensions.SIZE}
 						onClickCallback={onCellClick}
 					/>
@@ -184,4 +274,4 @@ const Board = ({ scoreHandler, restart, unsetRestart }: Props) => {
 	)
 };
 
-export default Board;
+export default AIBoard;

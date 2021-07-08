@@ -140,6 +140,8 @@ export const checkWinner = (
 	winStreak: number
 ): boolean | number[] => {
 
+	if (index === -1) return false;
+
 	return (
 		checkMoves(array, currentPlayer, size, index, winStreak, getColumn) ||
 		checkMoves(array, currentPlayer, size, index, winStreak, getRow) ||
