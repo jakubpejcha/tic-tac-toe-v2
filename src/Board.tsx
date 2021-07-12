@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Cell from './Cell';
 import { CellInterface } from './shared/interfaces';
 import { checkWinner } from './checkWinner';
+import { findBestMove } from './minimax';
 import Modal from './Modal';
 import './styles/Board.css';
 
@@ -34,12 +35,14 @@ const getDimensions = (numRows: number): Dimensions => {
 interface Props {
 	scoreHandler: (updatePlayer: string) => void,
 	restart: boolean,
-	unsetRestart: () => void,
+	handleRestart: (restart: boolean) => void,
+	size: number,
+	isAI:boolean
 }
 
-const Board = ({ scoreHandler, restart, unsetRestart }: Props) => {
+const Board = ({ scoreHandler, restart, handleRestart, size, isAI }: Props) => {
 
-	const dimensions = getDimensions(3);
+	const dimensions = getDimensions(size);
 
 	const [isWinner, setIsWinner] = useState(false);
 
@@ -59,6 +62,9 @@ const Board = ({ scoreHandler, restart, unsetRestart }: Props) => {
 
 	// restart board
 	useEffect(() => {
+		
+		if (!restart) return;
+
 		setIsWinner(false);
 		setIsDraw(false);
 		setNumMoves(0);
@@ -79,7 +85,9 @@ const Board = ({ scoreHandler, restart, unsetRestart }: Props) => {
 		});
 		
 		setLastCell(-1);
-		unsetRestart();
+
+		handleRestart(false);
+		
 	}, [restart]);
 
 	// Nice animation of creating the board
@@ -162,6 +170,38 @@ const Board = ({ scoreHandler, restart, unsetRestart }: Props) => {
 		});
 
 	}, [lastCell]);
+
+	//AI move
+	useEffect(() => {
+		if (player === 'o' && isAI) {
+
+			setCells((prevCells => {
+				// in case cell has been clicked before
+				// forAI
+				const boardData = {
+					cells: prevCells,
+					currentPlayer: 'o',
+					size: dimensions.BOARD_NUM_ROWS,
+					lastCellIndex: lastCell,
+					winStreak: dimensions.WIN_STREAK
+				}
+
+				const index = findBestMove(boardData);
+	
+				const newCells = [...prevCells];
+	
+				newCells[index] = {
+					...prevCells[index],
+					takenByPlayer: ' o'
+				}
+
+				setNumMoves(prevNum => prevNum + 1);
+				setLastCell(index);
+	
+				return newCells;
+			}));
+		}
+	}, [player]);
 
 	return (
 		<>

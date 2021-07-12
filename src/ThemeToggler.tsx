@@ -11,7 +11,7 @@ const ThemeToggler = ({ theme, onClickHandler }: Props) => {
 		<div
 			className={`theme-toggler theme-toggler--${theme}`}
 			onClick={onClickHandler}
-			title="Přepnout vzhled"
+			title="Toggle theme"
 		/>
 	)
 }

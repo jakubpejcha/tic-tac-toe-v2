@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ReactDom from 'react-dom';
 import './styles/Modal.css';
 
@@ -27,8 +27,8 @@ const Modal = ({ isWinner, isDraw, winner }: Props) => {
 	const portal: HTMLElement | null = document.getElementById('modalPortal');
 
 	let text: string = '';
-	if (isWinner) text = `Vyhrává hráč ${winner}`;
-	if (isDraw) text = "Došlo k remíze"
+	if (isWinner) text = `Player ${winner} wins!!!`;
+	if (isDraw) text = "Draw!!!"
 
 	return (
 		portal ?

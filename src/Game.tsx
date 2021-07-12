@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import AIBoard from './AIBoard';
 import Board from './Board';
 import ThemeToggler from './ThemeToggler';
 import { ScoreInterface } from './shared/interfaces';
@@ -30,19 +29,20 @@ const Game = () => {
     });
   }
 
-  const handleRestart = () => {
-    setRestart(true);
+  const handleRestart = (restart: boolean) => {
+    setRestart(restart);
   }
 
-  const unsetRestart = () => {
-    setRestart(false);
-  }
+  // const unsetRestart = () => {
+  //   setRestart(false);
+  // }
 
   type GameParams = {
+    mode: string,
     type: string
   }
 
-  const { type } = useParams<GameParams>();
+  const { mode: size, type } = useParams<GameParams>();
 
   return (
       <div className={`app-container app-container--${theme}`}>
@@ -52,8 +52,13 @@ const Game = () => {
           onClickHandler={handleThemeChange}
         />
         <Score score={score} theme={theme} />
-        {type === 'pvp' && <Board scoreHandler={handleScoreUpdate} restart={restart} unsetRestart={unsetRestart} />}
-        {type === 'pvc' && <AIBoard scoreHandler={handleScoreUpdate} restart={restart} unsetRestart={unsetRestart} />}
+        <Board
+          scoreHandler={handleScoreUpdate}
+          restart={restart}
+          handleRestart={handleRestart}
+          size={+size}
+          isAI={type === 'pvc'}
+        />
       </div>
   );
 };

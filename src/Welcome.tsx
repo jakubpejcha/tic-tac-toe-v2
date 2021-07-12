@@ -25,24 +25,24 @@ const Welcome = () => {
 					<Route path={`${path}/mode-3`}>
 						<GameMenu>
 							<li>
-								<Link to="/game/pvp">Player vs Player</Link>
+								<Link to="/game/3/pvp">Player vs Player</Link>
 							</li>
 							<li>
-								<Link to="/game/pvc">Player vs AI</Link>
+								<Link to="/game/3/pvc">Player vs AI</Link>
 							</li>
 						</GameMenu>
 					</Route>
 					<Route path={`${path}/mode-10`}>
 						<GameMenu>
 							<li>
-								<Link to="/game/pvp">Player vs Player</Link>
+								<Link to="/game/10/pvp">Player vs Player</Link>
 							</li>
 						</GameMenu>
 					</Route>
 					<Route path={path}>
 						<GameMenu>
 							<li>
-								<Link to={`${url}/mode-3`}>3 x 3 mode (possible AI opponent)</Link>
+								<Link to={`${url}/mode-3`}>3 x 3 mode (includes AI opponent)</Link>
 							</li>
 							<li>
 								<Link to={`${url}/mode-10`}>10 x 10 mode</Link>
