@@ -8,9 +8,47 @@
 .game-menu > li {
 	list-style: none;
 	display: block;
+	
 }
 
 .game-menu > li > a {
 	text-decoration: none;
 	color: currentColor;
+	position: relative;
+}
+
+.game-menu > li > a::after,
+.game-menu > li > a::before {
+	content: '';
+	display: inline-block;
+	width: 100%;
+	transform: scaleX(0);
+	height: 1px;
+	background: currentColor;
+	position: absolute;
+	left: 0;
+	transition: transform 300ms ease-in;
+}
+
+.game-menu > li > a::after {
+	bottom: -3px;
+	transform-origin: right;
+}
+
+.game-menu > li > a::before {
+	top: 3px;
+	transform-origin: left;
+}
+
+.game-menu > li > a:hover::after,
+.game-menu > li > a:hover::before {
+	transform: scaleX(1);
+}
+
+.game-menu > li > a:hover::after {
+	transform-origin: left;
+}
+
+.game-menu > li > a:hover::before {
+	transform-origin: right;
 }
