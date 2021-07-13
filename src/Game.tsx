@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Board from './Board';
 import ThemeToggler from './ThemeToggler';
 import { ScoreInterface } from './shared/interfaces';
 import Score from './Score';
 import Restart from './Restart';
-import { useParams } from 'react-router-dom';
+import Back from './Back';
+import { useParams} from 'react-router-dom';
 
 const Game = () => {
 
@@ -43,9 +44,11 @@ const Game = () => {
   }
 
   const { mode: size, type } = useParams<GameParams>();
+  
 
   return (
       <div className={`app-container app-container--${theme}`}>
+        <Back goToPath={null} />
         <Restart onClickHandler={handleRestart} theme={theme} />
         <ThemeToggler
           theme={theme}

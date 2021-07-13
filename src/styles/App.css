@@ -49,3 +49,15 @@ body {
 .app-container--grey {
   background: linear-gradient(135deg, var(--color-background-grey-light), var(--color-background-grey));
 }
+
+.app-container .back {
+  position: absolute;
+	top: -1rem;
+	left: 1rem;
+	font-size: 3rem;
+	color: var(--color-border-cell);
+}
+
+.app-container--grey .back {
+  color: var(--color-border-cell-grey);
+}

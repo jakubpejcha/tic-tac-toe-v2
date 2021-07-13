@@ -1,5 +1,6 @@
 import './styles/Welcome.css';
 import GameMenu from './GameMenu';
+import Back from './Back';
 import {
 	Link,
 	Route,
@@ -14,8 +15,6 @@ type RouteType = {
 
 const Welcome = () => {
 	const { path, url } = useRouteMatch<RouteType>();
-	console.log(path);
-	console.log(url);
 	
 	return (
 		<div className="welcome">
@@ -24,6 +23,7 @@ const Welcome = () => {
 				<Switch>
 					<Route path={`${path}/mode-3`}>
 						<GameMenu>
+							<Back goToPath={null} />
 							<li>
 								<Link to="/game/3/pvp">Player vs Player</Link>
 							</li>
@@ -34,6 +34,7 @@ const Welcome = () => {
 					</Route>
 					<Route path={`${path}/mode-10`}>
 						<GameMenu>
+							<Back goToPath={null} />
 							<li>
 								<Link to="/game/10/pvp">Player vs Player</Link>
 							</li>
