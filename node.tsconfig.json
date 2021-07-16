@@ -1,0 +1,11 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "ES2017"
+	},
+	"include": [
+		"api",
+		"./server.ts"
+	]
+}
