@@ -29,7 +29,7 @@
     "eject": "react-scripts eject",
     "server:start": "ts-node --project ./node.tsconfig.json server.ts"
   },
-  "proxy": "http://localhost:3001",
+  "proxy": "http://localhost:3001/",
   "eslintConfig": {
     "extends": [
       "react-app",

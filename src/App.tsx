@@ -12,7 +12,7 @@ const App = () => {
 	return (
 		<Router>
 			<Switch>
-				<Route path="/game/:mode/:type">
+				<Route path="/game/:mode/:type/:player">
 					<Game />
 				</Route>
 				<Route path="/welcome">

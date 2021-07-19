@@ -61,3 +61,11 @@ body {
 .app-container--grey .back {
   color: var(--color-border-cell-grey);
 }
+
+.move-note {
+  position: absolute;
+  left: 50%;
+  top: 11rem;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+}
