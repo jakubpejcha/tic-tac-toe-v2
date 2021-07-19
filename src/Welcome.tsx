@@ -25,7 +25,10 @@ const Welcome = () => {
 						<GameMenu>
 							<Back goToPath={null} />
 							<li>
-								<Link to="/game/3/pvp">Player vs Player</Link>
+								<Link to="/game/3/pvp">Player vs Player (hot-seat)</Link>
+							</li>
+							<li>
+								<Link to="/game/3/pvp-socket">Player vs Player (remote)</Link>
 							</li>
 							<li>
 								<Link to="/game/3/pvc">Player vs AI</Link>
@@ -36,7 +39,10 @@ const Welcome = () => {
 						<GameMenu>
 							<Back goToPath={null} />
 							<li>
-								<Link to="/game/10/pvp">Player vs Player</Link>
+								<Link to="/game/10/pvp">Player vs Player (hot-seat)</Link>
+							</li>
+							<li>
+								<Link to="/game/10/pvp-socket">Player vs Player (remote)</Link>
 							</li>
 						</GameMenu>
 					</Route>
