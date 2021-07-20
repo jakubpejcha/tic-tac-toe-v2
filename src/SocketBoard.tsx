@@ -43,12 +43,14 @@ interface Props {
 	restart: boolean,
 	handleRestart: (restart: boolean) => void,
 	size: number,
-  player: string
+	player: string,
+	guest: string
 }
 
-const socket = io("http://localhost:3001", {
-  autoConnect: false
-});
+// const socket = io("http://localhost:3001", {
+//   autoConnect: false
+// });
+let socket: any;
 
 const onSocketConnected = () => {
   console.log('connected');
@@ -63,15 +65,22 @@ const handleServerDisconnect = (reason: string) => {
 }
 
 
-const SocketBoard = ({ scoreHandler, restart, handleRestart, size, player }: Props) => {
-  let opponent = 'o';
-  if (player === 'o') opponent = 'x';
+const SocketBoard = ({ scoreHandler, restart, handleRestart, size, player, guest }: Props) => {
+	let opponent = 'o';
+	if (player === 'o') opponent = 'x';
+
+	
+	// const url = guest !== '' ? `http://localhost:3001/${guest}` : 'http://localhost:3001';
+	// console.log(url);
+	
+	
+
 
 	const dimensions = getDimensions(size);
 
 	const [isWinner, setIsWinner] = useState(false);
 
-  const [winner, setWinner] = useState(player);
+  	const [winner, setWinner] = useState(player);
 
 	const [isDraw, setIsDraw] = useState(false);
 
@@ -79,7 +88,7 @@ const SocketBoard = ({ scoreHandler, restart, handleRestart, size, player }: Pro
 
 	//const [player, setPlayer] = useState('x');
   // if set to true, this player can move
-  const [opponentMoved, setOpponentMoved] = useState(true);
+  	const [opponentMoved, setOpponentMoved] = useState(true);
 
 	const [cells, setCells] = useState<CellInterface[]>(Array(dimensions.BOARD_NUM_ROWS * dimensions.BOARD_NUM_ROWS).fill({
 		showClassName: '',
@@ -116,7 +125,7 @@ const SocketBoard = ({ scoreHandler, restart, handleRestart, size, player }: Pro
     scoreHandler(player);
     setWinner(player);
     setCells((prevCells) => {
-      const newCells = [...prevCells];
+      	const newCells = [...prevCells];
 
       //if (Array.isArray(result)) {
         console.log('winning cells');
@@ -135,9 +144,34 @@ const SocketBoard = ({ scoreHandler, restart, handleRestart, size, player }: Pro
     });
   }
 
+  const handleSocketDraw = (lastIndex: number) => {
+		setIsDraw(true);
+		setCells((prevCells) => {
+			const newCells = [...prevCells];
+
+			newCells[lastIndex].takenByPlayer = ` ${opponent}`;
+
+			return newCells;
+		});
+  }
+
+  const handleSocketRestart = () => {
+	handleRestart(true);
+  }
+
   // establish connection on game start
   useEffect(() => {
+
+	socket = io('http://localhost:3001', {
+		autoConnect: false,
+		query: {
+			host: guest
+		}
+	});
+
     socket.connect();
+
+	//console.log(socket.id);
 
     socket.on('connect', onSocketConnected);
 
@@ -151,6 +185,10 @@ const SocketBoard = ({ scoreHandler, restart, handleRestart, size, player }: Pro
 
     socket.on('winner', handleSocketWinner);
 
+	socket.on('draw', handleSocketDraw);
+
+	socket.on('restart', handleSocketRestart);
+
     return () => {
       socket.disconnect();
       socket.off('connect', onSocketConnected);
@@ -159,6 +197,8 @@ const SocketBoard = ({ scoreHandler, restart, handleRestart, size, player }: Pro
       socket.off('server_disconnected', handleServerDisconnect);
       socket.off('initiator', handleInitiator);
       socket.off('winner', handleSocketWinner);
+	  socket.off('draw', handleSocketDraw);
+	  socket.off('restart', handleSocketRestart);
     }
 
   }, []);
@@ -190,6 +230,8 @@ const SocketBoard = ({ scoreHandler, restart, handleRestart, size, player }: Pro
 		setLastCell(-1);
 
 		handleRestart(false);
+
+		socket.emit('restart');
 		
 	}, [restart]);
 
@@ -261,7 +303,7 @@ const SocketBoard = ({ scoreHandler, restart, handleRestart, size, player }: Pro
 				return newCells;
 			});
 
-      socket.emit('winner', {player, result});
+			socket.emit('winner', {player, result});
 
 			return;
 		}
@@ -270,26 +312,29 @@ const SocketBoard = ({ scoreHandler, restart, handleRestart, size, player }: Pro
 		// check for draw
 		if (numMoves === dimensions.BOARD_NUM_ROWS * dimensions.BOARD_NUM_ROWS) {
 			setIsDraw(true);
+
+			socket.emit('draw', lastCell);
+
 			return;
 		};
 
 
 
-    const socketData: SocketCellUpdateData = {
-      lastIndex: lastCell,
-      opponent: player,
-      numMoves: numMoves
-    }
-    socket.emit('cell_update', socketData);
+		const socketData: SocketCellUpdateData = {
+			lastIndex: lastCell,
+			opponent: player,
+			numMoves: numMoves
+		}
+		socket.emit('cell_update', socketData);
 
-    // set opponent moved
-    setOpponentMoved(false);
+		// set opponent moved
+		setOpponentMoved(false);
 
 	}, [lastCell]);
 
 	return (
 		<>
-      {!opponentMoved && !isWinner && <div className="move-note"><span>{`Player ${opponent}'s turn!`}</span></div>}
+			{!opponentMoved && !isWinner && !isDraw && <div className="move-note"><span>{`Player ${opponent}'s turn!`}</span></div>}
 			<div className={`board board_${dimensions.BOARD_NUM_ROWS}`}>
 				{cells.map((cell, pos) => (
 					<Cell

@@ -17,8 +17,7 @@
 	position: relative;
 }
 
-.game-menu > li > a::after,
-.game-menu > li > a::before {
+.game-menu > li > a::after {
 	content: '';
 	display: inline-block;
 	width: 100%;
@@ -35,20 +34,10 @@
 	transform-origin: right;
 }
 
-.game-menu > li > a::before {
-	top: 3px;
-	transform-origin: left;
-}
-
-.game-menu > li > a:hover::after,
-.game-menu > li > a:hover::before {
+.game-menu > li > a:hover::after{
 	transform: scaleX(1);
 }
 
 .game-menu > li > a:hover::after {
 	transform-origin: left;
-}
-
-.game-menu > li > a:hover::before {
-	transform-origin: right;
 }

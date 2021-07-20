@@ -28,7 +28,7 @@ const Welcome = () => {
 								<Link to="/game/3/pvp">Player vs Player (hot-seat)</Link>
 							</li>
 							<li>
-								<Link to="/game/3/pvp-socket/x">Player vs Player (remote)</Link>
+								<Link to="/game/3/pvp-socket?player=x">Player vs Player (remote)</Link>
 							</li>
 							<li>
 								<Link to="/game/3/pvc">Player vs AI</Link>
@@ -42,7 +42,7 @@ const Welcome = () => {
 								<Link to="/game/10/pvp">Player vs Player (hot-seat)</Link>
 							</li>
 							<li>
-								<Link to="/game/10/pvp-socket/x">Player vs Player (remote)</Link>
+								<Link to="/game/10/pvp-socket?player=x">Player vs Player (remote)</Link>
 							</li>
 						</GameMenu>
 					</Route>

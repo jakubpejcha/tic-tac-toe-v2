@@ -6,7 +6,7 @@ import { ScoreInterface } from './shared/interfaces';
 import Score from './Score';
 import Restart from './Restart';
 import Back from './Back';
-import { useParams} from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 const Game = () => {
 
@@ -38,11 +38,19 @@ const Game = () => {
   type GameParams = {
     mode: string,
     type: string,
-    player?: string
+    // player?: string,
+    // guest?: string
   }
 
-  const { mode: size, type, player } = useParams<GameParams>();
+  const { mode: size, type } = useParams<GameParams>();
+
+
+  const useQuery = () => {
+    return new URLSearchParams(useLocation().search);
+  }
   
+  const query = useQuery();
+  console.log(query.get('guest'));
 
   return (
       <div className={`app-container app-container--${theme}`}>
@@ -59,7 +67,8 @@ const Game = () => {
             restart={restart}
             handleRestart={handleRestart}
             size={+size}
-            player={player ?? ''}
+            player={query.get('player') ?? ''}
+            guest={query.get('guest') ?? ''}
           />
         }
         {type !== 'pvp-socket' &&
