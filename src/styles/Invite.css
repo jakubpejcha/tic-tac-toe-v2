@@ -1,0 +1,27 @@
+.invite {
+	position: absolute;
+	bottom: 1rem;
+	left: 1rem;
+	font-family: inherit;
+	font-size: .9em;
+	color: currentColor;
+}
+
+.invite__icon {
+	margin-left: .5em;
+}
+
+.invite__icon--clipboard {
+	cursor: pointer;
+	font-size: .9em;
+	transition: font-size 300ms;
+}
+
+.invite__icon--clipboard:hover {
+	font-size: 1em;
+}
+
+.invite__icon--info {
+	cursor: help;
+	font-size: .9em;
+}

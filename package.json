@@ -27,7 +27,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server:start": "ts-node --project ./node.tsconfig.json server.ts"
+    "server:watch": "nodemon --exec ts-node --project ./node.tsconfig.json server.ts"
   },
   "proxy": "http://localhost:3001/",
   "eslintConfig": {

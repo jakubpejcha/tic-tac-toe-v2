@@ -1,6 +1,7 @@
 import './styles/Welcome.css';
 import GameMenu from './GameMenu';
 import Back from './Back';
+import GuestForm from './GuestForm';
 import {
 	Link,
 	Route,
@@ -31,6 +32,9 @@ const Welcome = () => {
 								<Link to="/game/3/pvp-socket?player=x">Player vs Player (remote)</Link>
 							</li>
 							<li>
+								<Link to={`${url}/3/form/guest`}>Player vs Player (join friend)</Link>
+							</li>
+							<li>
 								<Link to="/game/3/pvc">Player vs AI</Link>
 							</li>
 						</GameMenu>
@@ -44,7 +48,15 @@ const Welcome = () => {
 							<li>
 								<Link to="/game/10/pvp-socket?player=x">Player vs Player (remote)</Link>
 							</li>
+							<li>
+								<Link to={`${url}/10/form/guest`}>Player vs Player (join friend)</Link>
+							</li>
 						</GameMenu>
+					</Route>
+					<Route path={`${path}/:mode/form/guest`}>
+						<GuestForm>
+							<Back goToPath={null} />
+						</GuestForm>
 					</Route>
 					<Route path={path}>
 						<GameMenu>

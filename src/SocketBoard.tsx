@@ -5,6 +5,7 @@ import { checkWinner } from './checkWinner';
 import Modal from './Modal';
 import './styles/Board.css';
 import { io } from 'socket.io-client';
+import Invite from './Invite';
 
 interface Dimensions {
 	BOARD_NUM_ROWS: number,
@@ -47,10 +48,7 @@ interface Props {
 	guest: string
 }
 
-// const socket = io("http://localhost:3001", {
-//   autoConnect: false
-// });
-let socket: any;
+let socket = io();
 
 const onSocketConnected = () => {
   console.log('connected');
@@ -335,6 +333,7 @@ const SocketBoard = ({ scoreHandler, restart, handleRestart, size, player, guest
 	return (
 		<>
 			{!opponentMoved && !isWinner && !isDraw && <div className="move-note"><span>{`Player ${opponent}'s turn!`}</span></div>}
+			<Invite roomId={socket.id}/>
 			<div className={`board board_${dimensions.BOARD_NUM_ROWS}`}>
 				{cells.map((cell, pos) => (
 					<Cell

@@ -41,13 +41,8 @@ const lobbies: { [index: string]: Lobby } = {};
 
 app.use(express.static(`${__dirname}/build`));
 
-// app.get('/:guestId', (req, res) => {
-// 	console.log(req.params);
-	
-// });
-
 // handle all requests not listed above this line by returnig react app
-app.get('*', (req, res) => {
+app.get('*', (_, res) => {
 	res.sendFile(__dirname + '/build/index.html');
 });
 
@@ -55,7 +50,6 @@ io.on('connection', (socket: Socket) => {
 	console.log(`Socket with id: ${socket.id} connected.`);
 	
 	const host = socket.handshake.query.host !== '' ? socket.handshake.query.host : socket.id;
-	console.log(host);
 	
 	// typeguard
 	if (typeof host !== 'string') return;
@@ -78,14 +72,6 @@ io.on('connection', (socket: Socket) => {
 		io.to(socket.id).emit('initiator', socket.handshake.query.host);
 	}
 	
-
-	console.log(socket.rooms)
-	
-
-	// take note of the first socket
-	// if (initiator === '') {
-	// 	initiator = socket.id;
-	// }
 
 	
 	socket.on('disconnect', (reason) => {

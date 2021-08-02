@@ -1,0 +1,70 @@
+.form--guest {
+	font-size: 2.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.4em;
+}
+
+.form--guest__row {
+	display: flex;
+	align-items: center;
+	position: relative;
+	gap: 0.5em;
+}
+
+.form--guest__input {
+	font-family: inherit;
+	font-size: .8em;
+	padding: .1em .5em;
+	width: 50%;
+	color: inherit;
+	background-color: rgba(65, 91, 141, .5);
+	border: none;
+	border-bottom: 3px solid transparent;
+}
+
+.form--guest__input:focus {
+	outline: none;
+	box-shadow: 0 1rem 2rem rgba(0, 0, 0, .1);
+	border-bottom: 3px solid currentColor;
+}
+
+.form--guest__label {
+	position: absolute;
+	font-size: 0.8em;
+	transition: all 300ms;
+	left: .5em;
+	top: 100%;
+}
+
+.form--guest__input:placeholder-shown + .form--guest__label {
+	opacity: 0;
+	visibility: hidden;
+	top: 0;
+}
+
+.form--guest__button {
+	text-decoration: none;
+	color: currentColor;
+	font-size: .7em;
+	position: relative;
+}
+
+.form--guest__button::after {
+	content: '';
+	display: inline-block;
+	width: 100%;
+	transform: scaleX(0);
+	height: 1px;
+	background: currentColor;
+	position: absolute;
+	left: 0;
+	bottom: -3px;
+	transform-origin: right;
+	transition: transform 200ms ease-in;
+}
+
+.form--guest__button:hover::after {
+	transform: scaleX(1);
+	transform-origin: left;
+}
