@@ -1,40 +1,48 @@
 .theme-toggler {
-	position: absolute;
-	top: 1rem;
-	right: 1rem;
-	width: 5rem;
-	height: 2.5rem;
-	border-radius: 50px;
-	cursor: pointer;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 5rem;
+    height: 2.5rem;
+    border-radius: 50px;
+    cursor: pointer;
 }
 
 .theme-toggler::after {
-	content: '';
-	height: 2rem;
-	width: 2rem;
-	border-radius: 50%;
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
-	transition: left .2s ease-in-out;
+    content: '';
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: left 0.2s ease-in-out;
 }
 
 .theme-toggler--color::after {
-	background: var(--color-border-cell);
-	left: 3px;
+    background: var(--color-border-cell);
+    left: 3px;
 }
 
 .theme-toggler--grey::after {
-	background: linear-gradient(135deg, var(--color-background-grey-light), var(--color-background-grey));
-	left: calc(100% - 2rem - 3px);
+    background: linear-gradient(
+        135deg,
+        var(--color-background-grey-light),
+        var(--color-background-grey)
+    );
+    left: calc(100% - 2rem - 3px);
 }
 
 .theme-toggler--color {
-	background: var(--color-background);
-	border: 2px solid var(--color-border-cell);
+    background: var(--color-background);
+    border: 2px solid var(--color-border-cell);
 }
 
 .theme-toggler--grey {
-	border: 2px inset var(--color-border-cell-border-grey);
-	background: linear-gradient(135deg, var(--color-border-cell-grey-light), var(--color-border-cell-grey));
+    border: 2px inset var(--color-border-cell-border-grey);
+    background: linear-gradient(
+        135deg,
+        var(--color-border-cell-grey-light),
+        var(--color-border-cell-grey)
+    );
 }

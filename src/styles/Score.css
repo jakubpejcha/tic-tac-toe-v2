@@ -1,50 +1,50 @@
 .score {
-	position: absolute;
-	top: 1rem;
-	left: 50%;
-	transform: translateX(-50%);
-	display: flex;
-	align-items: center;
-	gap: 3rem;
-	font-size: 4rem;
-	color: var(--color-border-cell);
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    font-size: 4rem;
+    color: var(--color-border-cell);
 }
 
 .score--grey {
-	color: var(--color-border-cell-grey);
+    color: var(--color-border-cell-grey);
 }
 
 .score__table {
-	font-size: .9em;
-	font-family: 'Tourney', cursive;
+    font-size: 0.9em;
+    font-family: 'Tourney', cursive;
 }
 
 .score__row {
-	display: flex;
-	text-align: center;
+    display: flex;
+    text-align: center;
 }
 
 .score__row > span {
-	flex: 1;
+    flex: 1;
 }
 
 .score__row:first-child {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .score__row:last-child {
-	font-size: .8em;
+    font-size: 0.8em;
 }
 
 .score__column--left {
-	border-right: 2px solid currentColor;
-	padding: 0 .25em 0 .5em;
+    border-right: 2px solid currentColor;
+    padding: 0 0.25em 0 0.5em;
 }
 
 .score__column--right {
-	padding: 0 .5em 0 .25em;
+    padding: 0 0.5em 0 0.25em;
 }
 
 .score__row--players {
-	border-bottom: 3px solid currentColor;
+    border-bottom: 3px solid currentColor;
 }

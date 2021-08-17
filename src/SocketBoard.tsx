@@ -8,349 +8,360 @@ import { io } from 'socket.io-client';
 import Invite from './Invite';
 
 interface Dimensions {
-	BOARD_NUM_ROWS: number,
-	SIZE: string,
-	DELAY: number,
-	WIN_STREAK: number
+    BOARD_NUM_ROWS: number;
+    SIZE: string;
+    DELAY: number;
+    WIN_STREAK: number;
 }
 
 interface SocketCellUpdateData {
-  lastIndex: number,
-  opponent: string,
-  numMoves: number
+    lastIndex: number;
+    opponent: string;
+    numMoves: number;
 }
 
 const getDimensions = (numRows: number): Dimensions => {
-	const dimensions = {
-		BOARD_NUM_ROWS: numRows,
-		SIZE: '',
-		DELAY: 0,
-		WIN_STREAK: 0
-	}
+    const dimensions = {
+        BOARD_NUM_ROWS: numRows,
+        SIZE: '',
+        DELAY: 0,
+        WIN_STREAK: 0,
+    };
 
-	if (numRows === 3) dimensions.SIZE = '--small';
-	if (numRows === 10) dimensions.SIZE = '--large';
+    if (numRows === 3) dimensions.SIZE = '--small';
+    if (numRows === 10) dimensions.SIZE = '--large';
 
-	if (numRows === 3) dimensions.DELAY = 150;
-	if (numRows === 10) dimensions.DELAY = 10;
+    if (numRows === 3) dimensions.DELAY = 150;
+    if (numRows === 10) dimensions.DELAY = 10;
 
-	dimensions.WIN_STREAK = numRows >= 5 ? 5 : numRows;
+    dimensions.WIN_STREAK = numRows >= 5 ? 5 : numRows;
 
-	return dimensions;
-}
+    return dimensions;
+};
 
 interface Props {
-	scoreHandler: (updatePlayer: string) => void,
-	restart: boolean,
-	handleRestart: (restart: boolean) => void,
-	size: number,
-	player: string,
-	guest: string
+    scoreHandler: (updatePlayer: string) => void;
+    restart: boolean;
+    handleRestart: (restart: boolean) => void;
+    size: number;
+    player: string;
+    guest: string;
 }
 
 let socket = io();
 
 const onSocketConnected = () => {
-  console.log('connected');
-}
+    console.log('connected');
+};
 
 const onSocketDisconnected = () => {
-  console.log('disconnected');
-}
+    console.log('disconnected');
+};
 
 const handleServerDisconnect = (reason: string) => {
-  console.log(reason);
-}
+    console.log(reason);
+};
 
+const SocketBoard = ({
+    scoreHandler,
+    restart,
+    handleRestart,
+    size,
+    player,
+    guest,
+}: Props) => {
+    let opponent = 'o';
+    if (player === 'o') opponent = 'x';
 
-const SocketBoard = ({ scoreHandler, restart, handleRestart, size, player, guest }: Props) => {
-	let opponent = 'o';
-	if (player === 'o') opponent = 'x';
+    // const url = guest !== '' ? `http://localhost:3001/${guest}` : 'http://localhost:3001';
+    // console.log(url);
 
-	
-	// const url = guest !== '' ? `http://localhost:3001/${guest}` : 'http://localhost:3001';
-	// console.log(url);
-	
-	
+    const dimensions = getDimensions(size);
 
+    const [isWinner, setIsWinner] = useState(false);
 
-	const dimensions = getDimensions(size);
+    const [winner, setWinner] = useState(player);
 
-	const [isWinner, setIsWinner] = useState(false);
+    const [isDraw, setIsDraw] = useState(false);
 
-  	const [winner, setWinner] = useState(player);
+    const [numMoves, setNumMoves] = useState(0);
 
-	const [isDraw, setIsDraw] = useState(false);
+    //const [player, setPlayer] = useState('x');
+    // if set to true, this player can move
+    const [opponentMoved, setOpponentMoved] = useState(true);
 
-	const [numMoves, setNumMoves] = useState(0);
+    const [cells, setCells] = useState<CellInterface[]>(
+        Array(dimensions.BOARD_NUM_ROWS * dimensions.BOARD_NUM_ROWS).fill({
+            showClassName: '',
+            takenByPlayer: '',
+            winning: false,
+        })
+    );
 
-	//const [player, setPlayer] = useState('x');
-  // if set to true, this player can move
-  	const [opponentMoved, setOpponentMoved] = useState(true);
+    const [lastCell, setLastCell] = useState(-1);
 
-	const [cells, setCells] = useState<CellInterface[]>(Array(dimensions.BOARD_NUM_ROWS * dimensions.BOARD_NUM_ROWS).fill({
-		showClassName: '',
-		takenByPlayer: '',
-		winning: false,
-	}));
+    const handleSocketCellUpdate = (data: SocketCellUpdateData) => {
+        console.log('updating cells');
+        console.table(data);
 
-	const [lastCell, setLastCell] = useState(-1);
+        setCells((prevCells) => {
+            const newCells = [...prevCells];
 
-  const handleSocketCellUpdate = (data: SocketCellUpdateData) => {
-    console.log('updating cells');
-    console.table(data);
-    
-    setCells((prevCells) => {
-      const newCells = [...prevCells];
+            newCells[data.lastIndex].takenByPlayer = ` ${data.opponent}`;
 
-      newCells[data.lastIndex].takenByPlayer = ` ${data.opponent}`;
-
-      return newCells;
-    });
-
-    setNumMoves(data.numMoves);
-
-    // set opponent moved
-    setOpponentMoved(true);
-  }
-
-  const handleInitiator = (initiator: string) => {
-    setOpponentMoved(socket.id === initiator);
-  }
-
-  const handleSocketWinner = ({player, result}: {player: string, result: number[]}) => {
-    setIsWinner(true);
-    scoreHandler(player);
-    setWinner(player);
-    setCells((prevCells) => {
-      	const newCells = [...prevCells];
-
-      //if (Array.isArray(result)) {
-        console.log('winning cells');
-        
-        result.forEach(cell => {
-          newCells[cell] = {
-            ...prevCells[cell],
-            winning: true,
-            takenByPlayer: ` ${player}`
-          };
+            return newCells;
         });
-      //}
-      
 
-      return newCells;
-    });
-  }
+        setNumMoves(data.numMoves);
 
-  const handleSocketDraw = (lastIndex: number) => {
-		setIsDraw(true);
-		setCells((prevCells) => {
-			const newCells = [...prevCells];
+        // set opponent moved
+        setOpponentMoved(true);
+    };
 
-			newCells[lastIndex].takenByPlayer = ` ${opponent}`;
+    const handleInitiator = (initiator: string) => {
+        setOpponentMoved(socket.id === initiator);
+    };
 
-			return newCells;
-		});
-  }
+    const handleSocketWinner = ({
+        player,
+        result,
+    }: {
+        player: string;
+        result: number[];
+    }) => {
+        setIsWinner(true);
+        scoreHandler(player);
+        setWinner(player);
+        setCells((prevCells) => {
+            const newCells = [...prevCells];
 
-  const handleSocketRestart = () => {
-	handleRestart(true);
-  }
+            //if (Array.isArray(result)) {
+            console.log('winning cells');
 
-  // establish connection on game start
-  useEffect(() => {
+            result.forEach((cell) => {
+                newCells[cell] = {
+                    ...prevCells[cell],
+                    winning: true,
+                    takenByPlayer: ` ${player}`,
+                };
+            });
+            //}
 
-	socket = io('http://localhost:3001', {
-		autoConnect: false,
-		query: {
-			host: guest
-		}
-	});
+            return newCells;
+        });
+    };
 
-    socket.connect();
+    const handleSocketDraw = (lastIndex: number) => {
+        setIsDraw(true);
+        setCells((prevCells) => {
+            const newCells = [...prevCells];
 
-	//console.log(socket.id);
+            newCells[lastIndex].takenByPlayer = ` ${opponent}`;
 
-    socket.on('connect', onSocketConnected);
+            return newCells;
+        });
+    };
 
-    socket.on('disconnect', onSocketDisconnected);
+    const handleSocketRestart = () => {
+        handleRestart(true);
+    };
 
-    socket.on('server_disconnected', handleServerDisconnect);
+    // establish connection on game start
+    useEffect(() => {
+        socket = io('http://localhost:3002', {
+            autoConnect: false,
+            query: {
+                host: guest,
+            },
+        });
 
-    socket.on('initiator', handleInitiator);
+        socket.connect();
 
-    socket.on('cell_update', handleSocketCellUpdate);
+        //console.log(socket.id);
 
-    socket.on('winner', handleSocketWinner);
+        socket.on('connect', onSocketConnected);
 
-	socket.on('draw', handleSocketDraw);
+        socket.on('disconnect', onSocketDisconnected);
 
-	socket.on('restart', handleSocketRestart);
+        socket.on('server_disconnected', handleServerDisconnect);
 
-    return () => {
-      socket.disconnect();
-      socket.off('connect', onSocketConnected);
-      socket.off('disconnect', onSocketDisconnected);
-      socket.off('cell_update', handleSocketCellUpdate);
-      socket.off('server_disconnected', handleServerDisconnect);
-      socket.off('initiator', handleInitiator);
-      socket.off('winner', handleSocketWinner);
-	  socket.off('draw', handleSocketDraw);
-	  socket.off('restart', handleSocketRestart);
-    }
+        socket.on('initiator', handleInitiator);
 
-  }, []);
+        socket.on('cell_update', handleSocketCellUpdate);
 
-	// restart board
-	useEffect(() => {
-		
-		if (!restart) return;
+        socket.on('winner', handleSocketWinner);
 
-		setIsWinner(false);
-		setIsDraw(false);
-		setNumMoves(0);
-		//setPlayer('x');
+        socket.on('draw', handleSocketDraw);
 
-		cells.forEach((cell, index) => {
-			setCells(prevCells => {
-				const newCells = [...prevCells];
-	
-				newCells[index] = {
-					...cell,
-					takenByPlayer: '',
-					winning: false
-				}
+        socket.on('restart', handleSocketRestart);
 
-				return newCells;
-			});
-		});
-		
-		setLastCell(-1);
+        return () => {
+            socket.disconnect();
+            socket.off('connect', onSocketConnected);
+            socket.off('disconnect', onSocketDisconnected);
+            socket.off('cell_update', handleSocketCellUpdate);
+            socket.off('server_disconnected', handleServerDisconnect);
+            socket.off('initiator', handleInitiator);
+            socket.off('winner', handleSocketWinner);
+            socket.off('draw', handleSocketDraw);
+            socket.off('restart', handleSocketRestart);
+        };
+    }, []);
 
-		handleRestart(false);
+    // restart board
+    useEffect(() => {
+        if (!restart) return;
 
-		socket.emit('restart');
-		
-	}, [restart]);
+        setIsWinner(false);
+        setIsDraw(false);
+        setNumMoves(0);
+        //setPlayer('x');
 
-	// Nice animation of creating the board
-	const showBoard = () => {
+        cells.forEach((cell, index) => {
+            setCells((prevCells) => {
+                const newCells = [...prevCells];
 
-		cells.forEach((cell, index) => {
-			setTimeout(() => {
-				setCells((prevCells) => {
-					const newCells = [...prevCells];
-	
-					newCells[index] = {
-						...cell,
-						showClassName: ' show'
-					}
-	
-					return newCells;
-				});
-			}, index * dimensions.DELAY);
-		});
-	};
+                newCells[index] = {
+                    ...cell,
+                    takenByPlayer: '',
+                    winning: false,
+                };
 
-	useEffect(() => {
-		showBoard();
-	}, []);
+                return newCells;
+            });
+        });
 
-	const onCellClick = (index: number) => {
+        setLastCell(-1);
 
-    if (!opponentMoved) return;
+        handleRestart(false);
 
-		setCells((prevCells => {
-			// in case cell has been clicked before
-			if (prevCells[index].takenByPlayer !== '' || isWinner) return prevCells;
+        socket.emit('restart');
+    }, [restart]);
 
-			const newCells = [...prevCells];
+    // Nice animation of creating the board
+    const showBoard = () => {
+        cells.forEach((cell, index) => {
+            setTimeout(() => {
+                setCells((prevCells) => {
+                    const newCells = [...prevCells];
 
-			newCells[index] = {
-				...prevCells[index],
-				takenByPlayer: ` ${player}`
-			}
+                    newCells[index] = {
+                        ...cell,
+                        showClassName: ' show',
+                    };
 
-			setNumMoves(prevNum => prevNum + 1);
-			setLastCell(index);
-      
-			return newCells;
-		}));
+                    return newCells;
+                });
+            }, index * dimensions.DELAY);
+        });
+    };
 
-	};
+    useEffect(() => {
+        showBoard();
+    }, []);
 
-	useEffect(() => {
-		//TEST
-		if (lastCell === -1) return; // do not run after app starts
-    
+    const onCellClick = (index: number) => {
+        if (!opponentMoved) return;
 
-		const result = checkWinner(cells, player, dimensions.BOARD_NUM_ROWS, lastCell, dimensions.WIN_STREAK);
-		
-		if (result && Array.isArray(result)) {
-			setIsWinner(true);
-			scoreHandler(player);
-			setCells((prevCells) => {
-				const newCells = [...prevCells];
-				result.forEach(cell => {
-					newCells[cell] = {
-						...prevCells[cell],
-						winning: true,
-					};
-				});
+        setCells((prevCells) => {
+            // in case cell has been clicked before
+            if (prevCells[index].takenByPlayer !== '' || isWinner)
+                return prevCells;
 
-				return newCells;
-			});
+            const newCells = [...prevCells];
 
-			socket.emit('winner', {player, result});
+            newCells[index] = {
+                ...prevCells[index],
+                takenByPlayer: ` ${player}`,
+            };
 
-			return;
-		}
-		
+            setNumMoves((prevNum) => prevNum + 1);
+            setLastCell(index);
 
-		// check for draw
-		if (numMoves === dimensions.BOARD_NUM_ROWS * dimensions.BOARD_NUM_ROWS) {
-			setIsDraw(true);
+            return newCells;
+        });
+    };
 
-			socket.emit('draw', lastCell);
+    useEffect(() => {
+        //TEST
+        if (lastCell === -1) return; // do not run after app starts
 
-			return;
-		};
+        const result = checkWinner(
+            cells,
+            player,
+            dimensions.BOARD_NUM_ROWS,
+            lastCell,
+            dimensions.WIN_STREAK
+        );
 
+        if (result && Array.isArray(result)) {
+            setIsWinner(true);
+            scoreHandler(player);
+            setCells((prevCells) => {
+                const newCells = [...prevCells];
+                result.forEach((cell) => {
+                    newCells[cell] = {
+                        ...prevCells[cell],
+                        winning: true,
+                    };
+                });
 
+                return newCells;
+            });
 
-		const socketData: SocketCellUpdateData = {
-			lastIndex: lastCell,
-			opponent: player,
-			numMoves: numMoves
-		}
-		socket.emit('cell_update', socketData);
+            socket.emit('winner', { player, result });
 
-		// set opponent moved
-		setOpponentMoved(false);
+            return;
+        }
 
-	}, [lastCell]);
+        // check for draw
+        if (
+            numMoves ===
+            dimensions.BOARD_NUM_ROWS * dimensions.BOARD_NUM_ROWS
+        ) {
+            setIsDraw(true);
 
-	return (
-		<>
-			{!opponentMoved && !isWinner && !isDraw && <div className="move-note"><span>{`Player ${opponent}'s turn!`}</span></div>}
-			<Invite roomId={socket.id}/>
-			<div className={`board board_${dimensions.BOARD_NUM_ROWS}`}>
-				{cells.map((cell, pos) => (
-					<Cell
-						key={pos}
-						index={pos}
-						showClassName={cell.showClassName}
-						takenByPlayer={cell.takenByPlayer}
-						winning={cell.winning}
-						currentPlayer={` current_${player}`}
-						size={dimensions.SIZE}
-						onClickCallback={onCellClick}
-					/>
-				))}
-			</div>
-			<Modal isWinner={isWinner} isDraw={isDraw} winner={winner} />
-		</>
-	)
+            socket.emit('draw', lastCell);
+
+            return;
+        }
+
+        const socketData: SocketCellUpdateData = {
+            lastIndex: lastCell,
+            opponent: player,
+            numMoves: numMoves,
+        };
+        socket.emit('cell_update', socketData);
+
+        // set opponent moved
+        setOpponentMoved(false);
+    }, [lastCell]);
+
+    return (
+        <>
+            {!opponentMoved && !isWinner && !isDraw && (
+                <div className='move-note'>
+                    <span>{`Player ${opponent}'s turn!`}</span>
+                </div>
+            )}
+            <Invite roomId={socket.id} />
+            <div className={`board board_${dimensions.BOARD_NUM_ROWS}`}>
+                {cells.map((cell, pos) => (
+                    <Cell
+                        key={pos}
+                        index={pos}
+                        showClassName={cell.showClassName}
+                        takenByPlayer={cell.takenByPlayer}
+                        winning={cell.winning}
+                        currentPlayer={` current_${player}`}
+                        size={dimensions.SIZE}
+                        onClickCallback={onCellClick}
+                    />
+                ))}
+            </div>
+            <Modal isWinner={isWinner} isDraw={isDraw} winner={winner} />
+        </>
+    );
 };
 
 export default SocketBoard;

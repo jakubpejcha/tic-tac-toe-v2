@@ -3,45 +3,60 @@ import './styles/GuestForm.css';
 import { useHistory, useParams } from 'react-router-dom';
 
 interface Props {
-	children: React.ReactNode
+    children: React.ReactNode;
 }
 
 const GuestForm = (props: Props) => {
-	type GameParams = {
-		mode: string,
-		type: string,
-	}
-	
-	const { mode: size } = useParams<GameParams>();
+    type GameParams = {
+        mode: string;
+        type: string;
+    };
 
-	console.log(size);
-	
-	const baseUrl = `/game/${size}/pvp-socket?player=o`;
+    const { mode: size } = useParams<GameParams>();
 
-	const inputRef = useRef<HTMLInputElement>(null);
+    console.log(size);
 
-	const history = useHistory();
+    const baseUrl = `/game/${size}/pvp-socket?player=o`;
 
-	const handleJoinLobby = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		e.preventDefault();
+    const inputRef = useRef<HTMLInputElement>(null);
 
-		const inputValue = inputRef.current?.value;
+    const history = useHistory();
 
-		const url = `${baseUrl}&guest=${inputValue}`;
+    const handleJoinLobby = (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => {
+        e.preventDefault();
 
-		history.push(url);
-	}
+        const inputValue = inputRef.current?.value;
 
-	return (
-		<div className="form--guest">
-			{props.children}
-			<div className="form--guest__row">
-				<input id="lobbyIdInput" className="form--guest__input" placeholder="Lobby id" type="text" ref={inputRef} />
-				<label htmlFor="lobbyIdInput" className="form--guest__label">Lobby id</label>
-				<button className="form--guest__button" onClick={handleJoinLobby}>Join</button>
-			</div>
-		</div>
-	)
-}
+        const url = `${baseUrl}&guest=${inputValue}`;
+
+        history.push(url);
+    };
+
+    return (
+        <div className='form--guest'>
+            {props.children}
+            <div className='form--guest__row'>
+                <input
+                    id='lobbyIdInput'
+                    className='form--guest__input'
+                    placeholder='Lobby id'
+                    type='text'
+                    ref={inputRef}
+                />
+                <label htmlFor='lobbyIdInput' className='form--guest__label'>
+                    Lobby id
+                </label>
+                <button
+                    className='form--guest__button'
+                    onClick={handleJoinLobby}
+                >
+                    Join
+                </button>
+            </div>
+        </div>
+    );
+};
 
 export default GuestForm;

@@ -1,21 +1,21 @@
 .back > button {
-	border: 0;
-	background: transparent;
-	color: currentColor;
-	font-size: .5em;
-	cursor: pointer;
-	font-family: inherit;
+    border: 0;
+    background: transparent;
+    color: currentColor;
+    font-size: 0.5em;
+    cursor: pointer;
+    font-family: inherit;
 }
 
 .back > button > svg {
-	transform: translateX(0);
-	transition: transform 200ms linear;
+    transform: translateX(0);
+    transition: transform 200ms linear;
 }
 
 .back > button:hover > svg {
-	transform: translateX(-5px);
+    transform: translateX(-5px);
 }
 
 .back__text {
-	margin-left: .4em;
+    margin-left: 0.4em;
 }

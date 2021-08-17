@@ -1,19 +1,21 @@
-import React from 'react';
+import { useContext } from 'react';
+import { ThemeContext } from './App';
 import './styles/ThemeToggler.css';
 
 interface Props {
-	theme: string,
-	onClickHandler: () => void
+    onClickHandler: () => void;
 }
 
-const ThemeToggler = ({ theme, onClickHandler }: Props) => {
-	return (
-		<div
-			className={`theme-toggler theme-toggler--${theme}`}
-			onClick={onClickHandler}
-			title="Toggle theme"
-		/>
-	)
-}
+const ThemeToggler = ({ onClickHandler }: Props) => {
+    const theme = useContext(ThemeContext);
+
+    return (
+        <div
+            className={`theme-toggler theme-toggler--${theme}`}
+            onClick={onClickHandler}
+            title='Toggle theme'
+        />
+    );
+};
 
 export default ThemeToggler;

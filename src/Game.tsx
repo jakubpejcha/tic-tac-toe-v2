@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { ThemeContext } from './App';
 import Board from './Board';
 import SocketBoard from './SocketBoard';
 import ThemeToggler from './ThemeToggler';
@@ -8,80 +9,67 @@ import Restart from './Restart';
 import Back from './Back';
 import { useParams, useLocation } from 'react-router-dom';
 
-const Game = () => {
+const Game = ({ themeHandler }: { themeHandler: () => void }) => {
+    const theme = useContext(ThemeContext);
 
-  const [themeGrey, setThemeGrey] = useState(false);
+    const [score, setScore] = useState<ScoreInterface>({ x: 0, o: 0 });
 
-  const theme = themeGrey ? 'grey' : 'color';
-  
-  const [score, setScore] = useState<ScoreInterface>({ 'x': 0, 'o': 0 });
+    const [restart, setRestart] = useState(false);
 
-  const [restart, setRestart] = useState(false);
+    const handleScoreUpdate = (updatePlayer: string) => {
+        setScore((prevScore) => {
+            return {
+                ...prevScore,
+                [updatePlayer]: prevScore[updatePlayer] + 1,
+            };
+        });
+    };
 
-  const handleThemeChange = () => {
-    setThemeGrey(prev => !prev)
-  }
+    const handleRestart = (restart: boolean) => {
+        setRestart(restart);
+    };
 
-  const handleScoreUpdate = (updatePlayer: string) => {
-    setScore(prevScore => {
-      return {
-        ...prevScore,
-        [updatePlayer]: prevScore[updatePlayer] + 1,
-      }
-    });
-  }
+    type GameParams = {
+        mode: string;
+        type: string;
+    };
 
-  const handleRestart = (restart: boolean) => {
-    setRestart(restart);
-  }
+    const { mode: size, type } = useParams<GameParams>();
 
-  type GameParams = {
-    mode: string,
-    type: string,
-    // player?: string,
-    // guest?: string
-  }
+    const useQuery = () => {
+        return new URLSearchParams(useLocation().search);
+    };
 
-  const { mode: size, type } = useParams<GameParams>();
+    const query = useQuery();
+    console.log(query.get('guest'));
 
-
-  const useQuery = () => {
-    return new URLSearchParams(useLocation().search);
-  }
-  
-  const query = useQuery();
-  console.log(query.get('guest'));
-
-  return (
-      <div className={`app-container app-container--${theme}`}>
-        <Back goToPath={null} />
-        <Restart onClickHandler={handleRestart} theme={theme} />
-        <ThemeToggler
-          theme={theme}
-          onClickHandler={handleThemeChange}
-        />
-        <Score score={score} theme={theme} />
-        {type === 'pvp-socket' &&
-          <SocketBoard
-            scoreHandler={handleScoreUpdate}
-            restart={restart}
-            handleRestart={handleRestart}
-            size={+size}
-            player={query.get('player') ?? ''}
-            guest={query.get('guest') ?? ''}
-          />
-        }
-        {type !== 'pvp-socket' &&
-          <Board
-            scoreHandler={handleScoreUpdate}
-            restart={restart}
-            handleRestart={handleRestart}
-            size={+size}
-            isAI={type === 'pvc'}
-          />
-        }
-      </div>
-  );
+    return (
+        <div className={`app-container app-container--${theme}`}>
+            <Back goToPath={null} />
+            <Restart onClickHandler={handleRestart} />
+            <ThemeToggler onClickHandler={themeHandler} />
+            <Score score={score} />
+            {type === 'pvp-socket' && (
+                <SocketBoard
+                    scoreHandler={handleScoreUpdate}
+                    restart={restart}
+                    handleRestart={handleRestart}
+                    size={+size}
+                    player={query.get('player') ?? ''}
+                    guest={query.get('guest') ?? ''}
+                />
+            )}
+            {type !== 'pvp-socket' && (
+                <Board
+                    scoreHandler={handleScoreUpdate}
+                    restart={restart}
+                    handleRestart={handleRestart}
+                    size={+size}
+                    isAI={type === 'pvc'}
+                />
+            )}
+        </div>
+    );
 };
 
 export default Game;

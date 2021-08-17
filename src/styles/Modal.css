@@ -1,44 +1,43 @@
 .modal {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: rgba(0, 0, 0, .7);
-	display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
 }
 
-@supports(-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px)) {
-	.modal {
-		-webkit-backdrop-filter: blur(10px);
-		backdrop-filter: blur(10px);
-		background-color: rgba(0, 0, 0, .7);
-	}
+@supports (-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px)) {
+    .modal {
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        background-color: rgba(0, 0, 0, 0.7);
+    }
 }
 
 .modal.show {
-	display: grid;
-	place-items: center;
+    display: grid;
+    place-items: center;
 }
 
 .modal__message {
-	background:  #dea821;
-	color: #42320a;
-	font-size: 4rem;
-	padding: .5em 4em;
-	text-transform: uppercase;
-	border-radius: 0 50px 0 50px;
-	box-shadow:
-		0 0 0 var(--modal-border-step) #e1b137,
-		0 0 0 calc( 2 * var(--modal-border-step)) #e4ba4e,
-		0 0 0 calc( 3 * var(--modal-border-step)) #e4ba51,
-		0 0 0 calc( 4 * var(--modal-border-step)) #e8c264,
-		0 0 0 calc( 5 * var(--modal-border-step)) #e9c569,
-		0 0 0 calc( 6 * var(--modal-border-step)) #ebcb7a,
-		0 0 0 calc( 7 * var(--modal-border-step)) #eccd7e,
-		0 0 0 calc( 8 * var(--modal-border-step)) #eed490,
-		0 0 0 calc( 9 * var(--modal-border-step)) #f2dca6,
-		0 0 0 calc( 10 * var(--modal-border-step)) #f1dda8,
-		0 0 0 calc( 11 * var(--modal-border-step)) #f5e5bc;
-	text-shadow: 2px 2px #f2dca6;
+    background: #dea821;
+    color: #42320a;
+    font-size: 4rem;
+    padding: 0.5em 4em;
+    text-transform: uppercase;
+    border-radius: 0 50px 0 50px;
+    box-shadow: 0 0 0 var(--modal-border-step) #e1b137,
+        0 0 0 calc(2 * var(--modal-border-step)) #e4ba4e,
+        0 0 0 calc(3 * var(--modal-border-step)) #e4ba51,
+        0 0 0 calc(4 * var(--modal-border-step)) #e8c264,
+        0 0 0 calc(5 * var(--modal-border-step)) #e9c569,
+        0 0 0 calc(6 * var(--modal-border-step)) #ebcb7a,
+        0 0 0 calc(7 * var(--modal-border-step)) #eccd7e,
+        0 0 0 calc(8 * var(--modal-border-step)) #eed490,
+        0 0 0 calc(9 * var(--modal-border-step)) #f2dca6,
+        0 0 0 calc(10 * var(--modal-border-step)) #f1dda8,
+        0 0 0 calc(11 * var(--modal-border-step)) #f5e5bc;
+    text-shadow: 2px 2px #f2dca6;
 }

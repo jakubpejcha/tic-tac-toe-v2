@@ -1,43 +1,42 @@
 .game-menu {
-	font-size: 2.5rem;
-	display: flex;
-	flex-direction: column;
-	gap: 0.4em;
+    font-size: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
 }
 
 .game-menu > li {
-	list-style: none;
-	display: block;
-	
+    list-style: none;
+    display: block;
 }
 
 .game-menu > li > a {
-	text-decoration: none;
-	color: currentColor;
-	position: relative;
+    text-decoration: none;
+    color: currentColor;
+    position: relative;
 }
 
 .game-menu > li > a::after {
-	content: '';
-	display: inline-block;
-	width: 100%;
-	transform: scaleX(0);
-	height: 1px;
-	background: currentColor;
-	position: absolute;
-	left: 0;
-	transition: transform 300ms ease-in;
+    content: '';
+    display: inline-block;
+    width: 100%;
+    transform: scaleX(0);
+    height: 1px;
+    background: currentColor;
+    position: absolute;
+    left: 0;
+    transition: transform 300ms ease-in;
 }
 
 .game-menu > li > a::after {
-	bottom: -3px;
-	transform-origin: right;
-}
-
-.game-menu > li > a:hover::after{
-	transform: scaleX(1);
+    bottom: -3px;
+    transform-origin: right;
 }
 
 .game-menu > li > a:hover::after {
-	transform-origin: left;
+    transform: scaleX(1);
+}
+
+.game-menu > li > a:hover::after {
+    transform-origin: left;
 }

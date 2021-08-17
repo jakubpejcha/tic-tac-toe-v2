@@ -1,16 +1,22 @@
+import { useContext } from 'react';
+import { ThemeContext } from './App';
 import './styles/Restart.css';
 
 interface Props {
-	onClickHandler: (restart: boolean) => void,
-	theme: string,
+    onClickHandler: (restart: boolean) => void;
 }
 
-const Restart = ({ onClickHandler, theme }: Props) => {
-	return (
-		<button className={`restart restart--${theme}`} onClick={() => onClickHandler(true)}>
-			<span>Clear board</span>
-		</button>
-	)
-}
+const Restart = ({ onClickHandler }: Props) => {
+    const theme = useContext(ThemeContext);
+
+    return (
+        <button
+            className={`restart restart--${theme}`}
+            onClick={() => onClickHandler(true)}
+        >
+            <span>Clear board</span>
+        </button>
+    );
+};
 
 export default Restart;
