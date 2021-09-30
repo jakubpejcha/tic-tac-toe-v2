@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { ThemeContext } from './App';
-import { ScoreInterface } from './shared/interfaces';
+import { ScoreInterface } from './shared/types';
 import './styles/Score.css';
 
 interface Props {

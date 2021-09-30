@@ -16,24 +16,43 @@ let gameRestarted = false;
 
 class Lobby {
     // the host socket
-    private _owner: Socket;
+    private _hostSocket: Socket;
+    private _id: string;
     private _name: string;
 
-    constructor(owner: Socket) {
-        this._owner = owner;
-        this._name = `Room:${owner.id}`;
+    private _maxPlayers = 2;
+    private _numPlayers = 0;
+
+    constructor(hostSocket: Socket) {
+        this._hostSocket = hostSocket;
+        this._id = hostSocket.id;
+        this._name = `Room:${hostSocket.id}`;
     }
 
     get id(): string {
-        return this._owner.id;
+        return this._id;
     }
 
     get name(): string {
         return this._name;
     }
 
+    private _updateNumOfPlayers() {
+        this._numPlayers++;
+    }
+
+    init() {
+        this.join(this._hostSocket);
+    }
+
     join(guest: Socket) {
+        if (this._numPlayers >= this._maxPlayers) {
+            // no more room in lobby
+            throw new Error('Lobby already full!');
+        }
+
         guest.join(this._name);
+        this._updateNumOfPlayers();
     }
 }
 
@@ -42,32 +61,37 @@ const lobbies: { [index: string]: Lobby } = {};
 io.on('connection', (socket: Socket) => {
     console.log(`Socket with id: ${socket.id} connected.`);
 
-    // Never accept an array
-    if (
-        Array.isArray(socket.handshake.query.host) ||
-        typeof socket.handshake.query.host === 'undefined'
-    ) {
+    const host = socket.handshake.query.host;
+
+    // Do not accept an array
+    if (Array.isArray(host) || typeof host === 'undefined') {
+        console.log(host);
         return;
     }
 
-    // TODO: if lobby is undefined!!!
-    let host: string;
+    let hostId: string;
 
-    if (socket.handshake.query.host === '') {
-        host = socket.id;
+    if (host === '') {
+        hostId = socket.id;
         // create new lobby
-        lobbies[host] = new Lobby(socket);
-        io.to(host).emit('initiator', host);
+        lobbies[hostId] = new Lobby(socket);
+        lobbies[hostId].init();
 
-        //test
-        socket.join(lobbies[host].name);
+        io.to(hostId).emit('initiator', hostId);
     } else {
-        host = socket.handshake.query.host;
+        console.log('host-non-empty:', host);
+        hostId = host;
+
         // join lobby
-        //lobbies[socket.handshake.query.host].join(socket);
-        //socket.join(socket.handshake.query.host);
-        socket.join(lobbies[host].name);
-        io.to(socket.id).emit('initiator', host);
+        try {
+            console.log('hostId:', hostId);
+
+            lobbies[hostId].join(socket);
+            io.to(socket.id).emit('initiator', hostId);
+            io.to(hostId).emit('restart');
+        } catch (error) {
+            console.log(error.message);
+        }
     }
 
     socket.on('disconnect', (reason) => {
@@ -77,22 +101,16 @@ io.on('connection', (socket: Socket) => {
             initiator = '';
         }
 
-        io.to(lobbies[host].name).emit('server_disconnected', reason);
+        if (lobbies[hostId]) {
+            io.to(lobbies[hostId].name).emit('server_disconnected', reason);
+            delete lobbies[hostId];
+        } else {
+            io.to(socket.id).emit('server_disconnected', reason);
+        }
     });
 
     socket.on('cell_update', (data) => {
-        console.table(data);
-        console.log(lobbies[host].id, host);
-
-        socket.to(lobbies[host].name).emit('cell_update', data);
-    });
-
-    socket.on('winner', (data: { player: string; result: number[] }) => {
-        socket.to(lobbies[host].name).emit('winner', data);
-    });
-
-    socket.on('draw', (lastIndex: number) => {
-        socket.to(lobbies[host].name).emit('draw', lastIndex);
+        socket.to(lobbies[hostId].name).emit('cell_update', data);
     });
 
     // TODO: move to lobby

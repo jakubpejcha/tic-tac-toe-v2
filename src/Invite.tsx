@@ -8,9 +8,11 @@ import './styles/Invite.css';
 
 interface Props {
     roomId: string;
+    isInitiator: boolean;
+    hostId: string;
 }
 
-const Invite = ({ roomId }: Props) => {
+const Invite = ({ roomId, isInitiator, hostId }: Props) => {
     const clipboardRef = useRef<HTMLSpanElement>(null);
 
     // NOTE: this might be overkill, one can just copy that id from props.. but to practise...
@@ -33,21 +35,25 @@ const Invite = ({ roomId }: Props) => {
         <div className='invite'>
             <span className='invite__label'>Lobby id: </span>
             <span className='invite__room' ref={clipboardRef}>
-                {roomId}
+                {isInitiator ? roomId : hostId}
             </span>
-            <span
-                className='invite__icon invite__icon--clipboard'
-                title='Copy id to clipboard'
-                onClick={handleCopyToClipboard}
-            >
-                <FontAwesomeIcon icon={faClipboard} />
-            </span>
-            <span
-                className='invite__icon invite__icon--info'
-                title='Copy this id and send it to your friend to join your lobby.'
-            >
-                <FontAwesomeIcon icon={faQuestionCircle} />
-            </span>
+            {isInitiator && (
+                <>
+                    <span
+                        className='invite__icon invite__icon--clipboard'
+                        title='Copy id to clipboard'
+                        onClick={handleCopyToClipboard}
+                    >
+                        <FontAwesomeIcon icon={faClipboard} />
+                    </span>
+                    <span
+                        className='invite__icon invite__icon--info'
+                        title='Copy this id and send it to your friend to join your lobby.'
+                    >
+                        <FontAwesomeIcon icon={faQuestionCircle} />
+                    </span>
+                </>
+            )}
         </div>
     );
 };

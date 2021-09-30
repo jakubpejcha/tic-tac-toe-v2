@@ -1,13 +1,20 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useCallback, useRef } from 'react';
 import { ThemeContext } from './App';
-import Board from './Board';
-import SocketBoard from './SocketBoard';
+import withBoard from './withBoard';
+import BoardWithHotSeat from './BoardWithHotSeat';
+import BoardWithAI from './BoardWithAI';
+import BoardWithSocket from './BoardWithSocket';
+//import SocketBoard from './SocketBoard';
 import ThemeToggler from './ThemeToggler';
-import { ScoreInterface } from './shared/interfaces';
+import { ScoreInterface, Player } from './shared/types';
 import Score from './Score';
 import Restart from './Restart';
 import Back from './Back';
 import { useParams, useLocation } from 'react-router-dom';
+
+const WithHotSeat = withBoard(BoardWithHotSeat);
+const WithAI = withBoard(BoardWithAI);
+const WithSocket = withBoard(BoardWithSocket);
 
 const Game = ({ themeHandler }: { themeHandler: () => void }) => {
     const theme = useContext(ThemeContext);
@@ -16,18 +23,20 @@ const Game = ({ themeHandler }: { themeHandler: () => void }) => {
 
     const [restart, setRestart] = useState(false);
 
-    const handleScoreUpdate = (updatePlayer: string) => {
+    const restartRef = useRef<HTMLButtonElement>(null);
+
+    const handleScoreUpdate = useCallback((updatePlayer: string) => {
         setScore((prevScore) => {
             return {
                 ...prevScore,
                 [updatePlayer]: prevScore[updatePlayer] + 1,
             };
         });
-    };
+    }, []);
 
-    const handleRestart = (restart: boolean) => {
+    const handleRestart = useCallback((restart: boolean) => {
         setRestart(restart);
-    };
+    }, []);
 
     type GameParams = {
         mode: string;
@@ -41,31 +50,40 @@ const Game = ({ themeHandler }: { themeHandler: () => void }) => {
     };
 
     const query = useQuery();
-    console.log(query.get('guest'));
 
     return (
         <div className={`app-container app-container--${theme}`}>
             <Back goToPath={null} />
-            <Restart onClickHandler={handleRestart} />
+            <Restart onClickHandler={handleRestart} ref={restartRef} />
             <ThemeToggler onClickHandler={themeHandler} />
             <Score score={score} />
             {type === 'pvp-socket' && (
-                <SocketBoard
+                <WithSocket
                     scoreHandler={handleScoreUpdate}
                     restart={restart}
                     handleRestart={handleRestart}
                     size={+size}
-                    player={query.get('player') ?? ''}
-                    guest={query.get('guest') ?? ''}
+                    hostPlayer={
+                        (query.get('player') ?? '') as Player | undefined
+                    }
+                    guestId={(query.get('guest') ?? '') as string | undefined}
+                    restartRef={restartRef}
                 />
             )}
-            {type !== 'pvp-socket' && (
-                <Board
+            {type === 'pvp' && (
+                <WithHotSeat
                     scoreHandler={handleScoreUpdate}
                     restart={restart}
                     handleRestart={handleRestart}
                     size={+size}
-                    isAI={type === 'pvc'}
+                />
+            )}
+            {type === 'pvc' && (
+                <WithAI
+                    scoreHandler={handleScoreUpdate}
+                    restart={restart}
+                    handleRestart={handleRestart}
+                    size={+size}
                 />
             )}
         </div>

@@ -1,4 +1,4 @@
-import { CellInterface } from './shared/interfaces';
+import { CellInterface } from './shared/types';
 
 const getColumn = (
     size: number,

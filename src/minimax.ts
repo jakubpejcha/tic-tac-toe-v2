@@ -1,5 +1,5 @@
 import { checkWinner } from './checkWinner';
-import { CellInterface } from './shared/interfaces';
+import { CellInterface } from './shared/types';
 
 const evaluateBoard = (
     result: boolean | number[],
@@ -128,9 +128,7 @@ export const findBestMove = (boardData: BoardData): number => {
             cell.takenByPlayer = currentPlayer;
             boardDataCopy.lastCellIndex = index;
 
-            console.time('minimax');
             let moveValue = minimax(0, boardDataCopy, true);
-            console.timeEnd('minimax');
 
             cell.takenByPlayer = '';
 
