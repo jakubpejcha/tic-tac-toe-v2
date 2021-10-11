@@ -1,5 +1,4 @@
-import { useContext } from 'react';
-import { ThemeContext } from './App';
+import { useTheme } from './ThemeContextWrapper';
 import { ScoreInterface } from './shared/types';
 import './styles/Score.css';
 
@@ -8,7 +7,7 @@ interface Props {
 }
 
 const Score = ({ score }: Props) => {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
 
     return (
         <div className={`score score--${theme}`}>

@@ -1,6 +1,5 @@
 import React from 'react';
-import { useContext } from 'react';
-import { ThemeContext } from './App';
+import { useTheme } from './ThemeContextWrapper';
 import './styles/Restart.css';
 
 interface Props {
@@ -9,7 +8,7 @@ interface Props {
 
 const Restart = React.forwardRef(
     ({ onClickHandler }: Props, ref: React.ForwardedRef<HTMLButtonElement>) => {
-        const theme = useContext(ThemeContext);
+        const theme = useTheme();
 
         return (
             <button

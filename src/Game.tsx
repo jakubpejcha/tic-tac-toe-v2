@@ -1,10 +1,9 @@
-import { useState, useContext, useCallback, useRef } from 'react';
-import { ThemeContext } from './App';
+import { useState, useCallback, useRef } from 'react';
+import { useTheme } from './ThemeContextWrapper';
 import withBoard from './withBoard';
 import BoardWithHotSeat from './BoardWithHotSeat';
 import BoardWithAI from './BoardWithAI';
 import BoardWithSocket from './BoardWithSocket';
-//import SocketBoard from './SocketBoard';
 import ThemeToggler from './ThemeToggler';
 import { ScoreInterface, Player } from './shared/types';
 import Score from './Score';
@@ -16,8 +15,8 @@ const WithHotSeat = withBoard(BoardWithHotSeat);
 const WithAI = withBoard(BoardWithAI);
 const WithSocket = withBoard(BoardWithSocket);
 
-const Game = ({ themeHandler }: { themeHandler: () => void }) => {
-    const theme = useContext(ThemeContext);
+const Game = () => {
+    const theme = useTheme();
 
     const [score, setScore] = useState<ScoreInterface>({ x: 0, o: 0 });
 
@@ -55,7 +54,7 @@ const Game = ({ themeHandler }: { themeHandler: () => void }) => {
         <div className={`app-container app-container--${theme}`}>
             <Back goToPath={null} />
             <Restart onClickHandler={handleRestart} ref={restartRef} />
-            <ThemeToggler onClickHandler={themeHandler} />
+            <ThemeToggler />
             <Score score={score} />
             {type === 'pvp-socket' && (
                 <WithSocket
