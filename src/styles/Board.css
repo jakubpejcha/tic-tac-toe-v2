@@ -1,20 +1,22 @@
 .board {
     display: grid;
     cursor: url(../images/pencil.svg), auto;
+    grid-row: board-start / board-end;
+    /* font-size: clamp(0.5rem, 1vw, 1rem); */
 }
 
 .board_3 {
     grid-template-columns: repeat(3, var(--cell-size));
     grid-template-rows: repeat(3, var(--cell-size));
-    grid-gap: 0.5rem;
+    grid-gap: 0.5em;
 }
 
 .app-container--grey .board_3 {
-    grid-gap: 1rem;
+    grid-gap: rem;
 }
 
 .board_10 {
     grid-template-columns: repeat(10, var(--cell-size-10));
     grid-template-rows: repeat(10, var(--cell-size-10));
-    grid-gap: 0.3rem;
+    grid-gap: 0.3em;
 }

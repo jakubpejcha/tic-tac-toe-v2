@@ -14,8 +14,6 @@ const GuestForm = (props: Props) => {
 
     const { mode: size } = useParams<GameParams>();
 
-    console.log(size);
-
     const baseUrl = `/game/${size}/pvp-socket?player=o`;
 
     const inputRef = useRef<HTMLInputElement>(null);
@@ -34,6 +32,7 @@ const GuestForm = (props: Props) => {
         history.push(url);
     };
 
+    // using uncontrolled input comoponent
     return (
         <div className='form--guest'>
             {props.children}

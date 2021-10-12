@@ -40,6 +40,14 @@ const BoardWithHotSeat = (props: Props) => {
         console.log(props.isWinner);
     }, [moveHandler]);
 
+    useEffect(() => {
+        console.log('Hot-seat mounted');
+
+        return () => {
+            console.log('Hot-seat unmounted');
+        };
+    }, []);
+
     return (
         <>
             <div className={`board board_${props.dimensions.BOARD_NUM_ROWS}`}>

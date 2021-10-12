@@ -47,6 +47,9 @@ interface PassThroughProps {
     restartRef?: React.RefObject<HTMLButtonElement>;
 }
 
+// TODO: restart on back click -> ref and first click on restart??
+// or on cleanup at unmount??
+
 const withBoard = (
     Component: (passThroughProps: PassThroughProps) => JSX.Element
 ) => {
@@ -80,7 +83,7 @@ const withBoard = (
             })
         );
 
-        console.log('hrac: ', player);
+        //console.log('hrac: ', player);
 
         const showModal = () => {
             setIsModal(true);
@@ -214,7 +217,7 @@ const withBoard = (
                     return newCells;
                 });
                 currentPlayer = player;
-                console.log('currentPlayer: ', currentPlayer);
+                //console.log('currentPlayer: ', currentPlayer);
 
                 // Do not swap players after game over
                 if (
@@ -243,6 +246,15 @@ const withBoard = (
             guestId,
             restartRef,
         };
+
+        useEffect(() => {
+            console.log('withBoard mounted');
+
+            return () => {
+                // TODO: some cleanup neccessary - maybe the above problem...
+                console.log('withBoard unmounted');
+            };
+        }, []);
 
         return (
             <BoardContext.Provider

@@ -7,8 +7,8 @@
 }
 
 :root {
-    --cell-size: 6rem; /* 3 x 3 */
-    --cell-size-10: 3rem;
+    --cell-size: 6em; /* 3 x 3 */
+    --cell-size-10: 3em;
 
     --color-background-welcome: linear-gradient(
         125deg,
@@ -44,6 +44,7 @@ body {
     height: 100vh;
     display: grid;
     place-items: center;
+    font-size: clamp(0.6rem, 1vw, 1rem);
 }
 
 .app-container--color {
@@ -62,7 +63,7 @@ body {
     position: absolute;
     top: -1rem;
     left: 1rem;
-    font-size: 3rem;
+    font-size: max(2rem, 3em);
     color: var(--color-border-cell);
 }
 

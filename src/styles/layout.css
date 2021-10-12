@@ -1,0 +1,15 @@
+.middle {
+    position: relative;
+    height: 100vh;
+    margin: auto;
+    display: grid;
+    grid-template-rows:
+        minmax(1rem, 1fr)
+        [score-start] min-content [score-end]
+        minmax(3rem, 5vw)
+        [board-start] min-content [board-end]
+        minmax(5rem, 10vw)
+        [restart-start] min-content [restart-end]
+        minmax(1rem, 1fr);
+    justify-items: center;
+}

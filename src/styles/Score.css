@@ -1,12 +1,13 @@
 .score {
-    position: absolute;
-    top: 1rem;
+    /* position: absolute; */
+    /* top: 1rem;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%); */
+    grid-row: score-start / score-end;
     display: flex;
     align-items: center;
     gap: 3rem;
-    font-size: 4rem;
+    font-size: 4em;
     color: var(--color-border-cell);
 }
 

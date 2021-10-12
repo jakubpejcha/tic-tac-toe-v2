@@ -10,7 +10,9 @@ import Score from './Score';
 import Restart from './Restart';
 import Back from './Back';
 import { useParams, useLocation } from 'react-router-dom';
+import './styles/layout.css';
 
+// TODO: this does not change on mode change
 const WithHotSeat = withBoard(BoardWithHotSeat);
 const WithAI = withBoard(BoardWithAI);
 const WithSocket = withBoard(BoardWithSocket);
@@ -53,38 +55,42 @@ const Game = () => {
     return (
         <div className={`app-container app-container--${theme}`}>
             <Back goToPath={null} />
-            <Restart onClickHandler={handleRestart} ref={restartRef} />
             <ThemeToggler />
-            <Score score={score} />
-            {type === 'pvp-socket' && (
-                <WithSocket
-                    scoreHandler={handleScoreUpdate}
-                    restart={restart}
-                    handleRestart={handleRestart}
-                    size={+size}
-                    hostPlayer={
-                        (query.get('player') ?? '') as Player | undefined
-                    }
-                    guestId={(query.get('guest') ?? '') as string | undefined}
-                    restartRef={restartRef}
-                />
-            )}
-            {type === 'pvp' && (
-                <WithHotSeat
-                    scoreHandler={handleScoreUpdate}
-                    restart={restart}
-                    handleRestart={handleRestart}
-                    size={+size}
-                />
-            )}
-            {type === 'pvc' && (
-                <WithAI
-                    scoreHandler={handleScoreUpdate}
-                    restart={restart}
-                    handleRestart={handleRestart}
-                    size={+size}
-                />
-            )}
+            <div className='middle'>
+                <Score score={score} />
+                {type === 'pvp-socket' && (
+                    <WithSocket
+                        scoreHandler={handleScoreUpdate}
+                        restart={restart}
+                        handleRestart={handleRestart}
+                        size={+size}
+                        hostPlayer={
+                            (query.get('player') ?? '') as Player | undefined
+                        }
+                        guestId={
+                            (query.get('guest') ?? '') as string | undefined
+                        }
+                        restartRef={restartRef}
+                    />
+                )}
+                {type === 'pvp' && (
+                    <WithHotSeat
+                        scoreHandler={handleScoreUpdate}
+                        restart={restart}
+                        handleRestart={handleRestart}
+                        size={+size}
+                    />
+                )}
+                {type === 'pvc' && (
+                    <WithAI
+                        scoreHandler={handleScoreUpdate}
+                        restart={restart}
+                        handleRestart={handleRestart}
+                        size={+size}
+                    />
+                )}
+                <Restart onClickHandler={handleRestart} ref={restartRef} />
+            </div>
         </div>
     );
 };
