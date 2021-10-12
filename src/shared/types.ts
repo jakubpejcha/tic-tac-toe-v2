@@ -25,3 +25,9 @@ export interface Dimensions {
 }
 
 export type Player = 'x' | 'o';
+
+export interface Route {
+    prependUrl: boolean;
+    path: string;
+    title: string;
+}

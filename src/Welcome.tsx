@@ -2,7 +2,11 @@ import './styles/Welcome.css';
 import GameMenu from './GameMenu';
 import Back from './Back';
 import GuestForm from './GuestForm';
-import { Link, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { pages as MainRoutes } from './GameRoutes/main';
+import { pages as Mode10Routes } from './GameRoutes/mode10';
+import { pages as Mode3Routes } from './GameRoutes/mode3';
+import GameRouteLink from './GameRouteLink';
 
 type RouteType = {
     path: string;
@@ -20,44 +24,29 @@ const Welcome = () => {
                     <Route path={`${path}/mode-3`}>
                         <GameMenu>
                             <Back goToPath={null} />
-                            <li>
-                                <Link to='/game/3/pvp'>
-                                    Player vs Player (hot-seat)
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to='/game/3/pvp-socket?player=x'>
-                                    Player vs Player (remote)
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to={`${url}/3/form/guest`}>
-                                    Player vs Player (join friend)
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to='/game/3/pvc'>Player vs AI</Link>
-                            </li>
+                            {Mode3Routes.map((route) => (
+                                <GameRouteLink
+                                    key={`${route.prependUrl}-${route.title}`}
+                                    rootUrl={url}
+                                    prependUrl={route.prependUrl}
+                                    path={route.path}
+                                    title={route.title}
+                                />
+                            ))}
                         </GameMenu>
                     </Route>
                     <Route path={`${path}/mode-10`}>
                         <GameMenu>
                             <Back goToPath={null} />
-                            <li>
-                                <Link to='/game/10/pvp'>
-                                    Player vs Player (hot-seat)
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to='/game/10/pvp-socket?player=x'>
-                                    Player vs Player (remote)
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to={`${url}/10/form/guest`}>
-                                    Player vs Player (join friend)
-                                </Link>
-                            </li>
+                            {Mode10Routes.map((route) => (
+                                <GameRouteLink
+                                    key={`${route.prependUrl}-${route.title}`}
+                                    rootUrl={url}
+                                    prependUrl={route.prependUrl}
+                                    path={route.path}
+                                    title={route.title}
+                                />
+                            ))}
                         </GameMenu>
                     </Route>
                     <Route path={`${path}/:mode/form/guest`}>
@@ -67,14 +56,15 @@ const Welcome = () => {
                     </Route>
                     <Route path={path}>
                         <GameMenu>
-                            <li>
-                                <Link to={`${url}/mode-3`}>
-                                    3 x 3 mode (includes AI opponent)
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to={`${url}/mode-10`}>10 x 10 mode</Link>
-                            </li>
+                            {MainRoutes.map((route) => (
+                                <GameRouteLink
+                                    key={`${route.prependUrl}-${route.title}`}
+                                    rootUrl={url}
+                                    prependUrl={route.prependUrl}
+                                    path={route.path}
+                                    title={route.title}
+                                />
+                            ))}
                         </GameMenu>
                     </Route>
                 </Switch>
